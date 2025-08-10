@@ -21,3 +21,8 @@ services:
       - ./back_static:/app/back_static
     depends_on:
       - web
+      - ./etc/nginx.conf:/etc/nginx/nginx.conf
+      - ./back_media:/app/back_media
+      - ./back_static:/app/back_static
+    depends_on:
+      - web
