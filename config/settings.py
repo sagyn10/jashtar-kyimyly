@@ -7,10 +7,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config('SECRET_KEY')
 
 DEBUG = True
-ALLOWED_HOSTS = ['0.0.0.0', 'localhost', '127.0.0.1']
+#ALLOWED_HOSTS = ['0.0.0.0', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['38.180.136.75', 'localhost', '127.0.0.1']
 
 JAZZMIN_UI_TWEAKS = JAZZMIN_UI_TWEAKS
-JAZZMIN_SETTINGS = JAZZMIN_SETTINGS
+
 
 
 CUSTOM_APPS = [
@@ -27,8 +28,9 @@ THIRD_PARTY_APPS = [
 
 
 INSTALLED_APPS = [
-    'modeltranslation',
     'jazzmin',
+    'django_extensions',
+    'modeltranslation',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -99,17 +101,11 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'back_static'
 
-STATICFILES_DIRS = [
-    BASE_DIR / 'static',
-    # BASE_DIR / 'locale_static',
-]
-
-MEDIA_URL = '/back_media/'
+MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'back_media'
-
 
 
 LANGUAGES = (
