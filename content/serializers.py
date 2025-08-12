@@ -1,26 +1,14 @@
 from rest_framework import serializers
-from .models import Events, Projects, EventImage, ProjectsImage, GalleryImage, Gallery
 from drf_spectacular.utils import extend_schema_field
-from .models import Gallery, GalleryImage
 from PIL import Image
 from io import BytesIO
 from django.core.files.base import ContentFile
-from drf_spectacular.utils import extend_schema_field
-from rest_framework import serializers
-from .models import (Events, Projects, EventImage,
-                     ProjectsImage, ActivityDirection,
-                     Departments, Results, News)
+from .models import (
+    Events, EventImage, Projects, ProjectsImage, Gallery, GalleryImage,
+    VideoArchive, ActivityDirection, Departments, DepartmentImage, Results, News
+)
 
-
-class ActivityDirectionSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = ActivityDirection
-        fields = 'title', 'description'
-
-class ProjectImageSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = ProjectsImage
-        fields = ('id', 'image')
+ALLOWED_FORMATS = ['JPEG', 'JPG', 'PNG']
 
 
 class EventImageSerializer(serializers.ModelSerializer):
@@ -28,53 +16,94 @@ class EventImageSerializer(serializers.ModelSerializer):
         model = EventImage
         fields = ('id', 'image')
 
-
-class ProjectsSerializer(serializers.ModelSerializer):
-    images = ProjectImageSerializer(many=True, required=False)
-
-    class Meta:
-        model = Projects
-        fields = ('id', 'title', 'description', 'images')
-
-    def create(self, validated_data):
-        images_data = self.initial_data.getlist('images')
-        if len(images_data) > 5:
-            raise serializers.ValidationError("Можно загрузить максимум 5 изображений.")
-
-        project = Projects.objects.create(
-            title=validated_data['title'],
-            description=validated_data['description']
-        )
-
-        for image in images_data:
-            ProjectsImage.objects.create(project=project, image=image)
-        return project
+    def validate_image(self, image):
+        img = Image.open(image)
+        if img.format.upper() not in ALLOWED_FORMATS:
+            raise serializers.ValidationError('Допустимые форматы: JPG, JPEG, PNG')
+        return image
 
 
-class EventsSerializer(serializers.ModelSerializer):
-    images = EventImageSerializer(many=True, required=False)
+class EventSerializer(serializers.ModelSerializer):
+    images = EventImageSerializer(many=True, read_only=True)
+    uploaded_images = serializers.ListField(
+        child=serializers.ImageField(),
+        write_only=True,
+        required=False
+    )
 
     class Meta:
         model = Events
-        fields = ('id', 'title', 'description', 'date', 'images')
+        fields = ('id', 'title', 'description', 'date', 'event_status', 'slug', 'images', 'uploaded_images')
+
+    def validate_uploaded_images(self, value):
+        if len(value) > 10:
+            raise serializers.ValidationError("Можно загрузить максимум 10 изображений.")
+        return value
 
     def create(self, validated_data):
-        images_data = self.initial_data.getlist('images')
-        if len(images_data) > 10:
-            raise serializers.ValidationError("Можно загрузить максимум 10 изображений.")
-
-        event = Events.objects.create(
-            title=validated_data['title'],
-            description=validated_data['description'],
-            date=validated_data['date']
-        )
-
+        images_data = validated_data.pop('uploaded_images', [])
+        event = Events.objects.create(**validated_data)
         for image in images_data:
             EventImage.objects.create(event=event, image=image)
         return event
 
+    def update(self, instance, validated_data):
+        images_data = validated_data.pop('uploaded_images', None)
+        instance = super().update(instance, validated_data)
+        if images_data:
+            if instance.images.count() + len(images_data) > 10:
+                raise serializers.ValidationError("Нельзя превысить лимит в 10 изображений.")
+            for image in images_data:
+                EventImage.objects.create(event=instance, image=image)
+        return instance
 
-ALLOWED_FORMATS = ['JPEG', 'JPG', 'PNG']
+
+class ProjectsImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProjectsImage
+        fields = ('id', 'image')
+
+    def validate_image(self, image):
+        img = Image.open(image)
+        if img.format.upper() not in ALLOWED_FORMATS:
+            raise serializers.ValidationError('Допустимые форматы: JPG, JPEG, PNG')
+        return image
+
+
+class ProjectSerializer(serializers.ModelSerializer):
+    images = ProjectsImageSerializer(many=True, read_only=True)
+    uploaded_images = serializers.ListField(
+        child=serializers.ImageField(),
+        write_only=True,
+        required=False
+    )
+
+    class Meta:
+        model = Projects
+        fields = ('id', 'title', 'description', 'slug', 'images', 'uploaded_images')
+
+    def validate_uploaded_images(self, value):
+        if len(value) > 5:
+            raise serializers.ValidationError("Можно загрузить максимум 5 изображений.")
+        return value
+
+    def create(self, validated_data):
+        images_data = validated_data.pop('uploaded_images', [])
+        project = Projects.objects.create(**validated_data)
+        for image in images_data:
+            ProjectsImage.objects.create(project=project, image=image)
+        return project
+
+    def update(self, instance, validated_data):
+        images_data = validated_data.pop('uploaded_images', None)
+        instance = super().update(instance, validated_data)
+        if images_data:
+            if instance.images.count() + len(images_data) > 5:
+                raise serializers.ValidationError("Нельзя превысить лимит в 5 изображений.")
+            for image in images_data:
+                ProjectsImage.objects.create(project=instance, image=image)
+        return instance
+
 
 class GalleryImageSerializer(serializers.ModelSerializer):
     class Meta:
@@ -87,55 +116,127 @@ class GalleryImageSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError('Допустимые форматы: JPG, JPEG, PNG')
         return image
 
-    def compress_image(self, image):
-        img = Image.open(image)
-        output_io = BytesIO()
-        img.save(output_io, format='JPEG', quality=70)
-        return ContentFile(output_io.getvalue(), image.name)
-
     def create(self, validated_data):
         image = validated_data.get('image')
-        compressed = self.compress_image(image)
-        validated_data['image'] = compressed
+        img = Image.open(image)
+        img = img.convert('RGB')
+        output_io = BytesIO()
+        img.save(output_io, format='JPEG', quality=70)
+        compressed_image = ContentFile(output_io.getvalue(), image.name)
+        validated_data['image'] = compressed_image
         return super().create(validated_data)
 
 
 class GallerySerializer(serializers.ModelSerializer):
-    images = GalleryImageSerializer(many=True, required=False)
+    images = GalleryImageSerializer(many=True, read_only=True)
+    uploaded_images = serializers.ListField(
+        child=serializers.ImageField(),
+        write_only=True,
+        required=False
+    )
 
     class Meta:
         model = Gallery
-        fields = ('id', 'title', 'images')
+        fields = ('id', 'title', 'date', 'images', 'uploaded_images')
+
+    def validate_uploaded_images(self, value):
+        if len(value) > 15:
+            raise serializers.ValidationError("Можно загрузить максимум 15 изображений.")
+        return value
 
     def create(self, validated_data):
-        images_data = self.initial_data.getlist('images')
-        if len(images_data) > 15:
-            raise serializers.ValidationError("Можно загрузить максимум 15 изображений.")
-
-        gallery = Gallery.objects.create(
-            title=validated_data['title']
-        )
-
+        images_data = validated_data.pop('uploaded_images', [])
+        gallery = Gallery.objects.create(**validated_data)
         for image in images_data:
             serializer = GalleryImageSerializer(data={'image': image})
             serializer.is_valid(raise_exception=True)
             serializer.save(gallery=gallery)
         return gallery
 
-class DepartmentsListSerializers(serializers.ModelSerializer):
+    def update(self, instance, validated_data):
+        images_data = validated_data.pop('uploaded_images', None)
+        instance = super().update(instance, validated_data)
+        if images_data:
+            if instance.images.count() + len(images_data) > 15:
+                raise serializers.ValidationError("Нельзя превысить лимит в 15 изображений.")
+            for image in images_data:
+                serializer = GalleryImageSerializer(data={'image': image})
+                serializer.is_valid(raise_exception=True)
+                serializer.save(gallery=instance)
+        return instance
+
+
+class VideoArchiveSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = VideoArchive
+        fields = ('id', 'title', 'video_url')
+
+    def validate_video_url(self, value):
+        if not ('youtube.com' in value or 'youtu.be' in value):
+            raise serializers.ValidationError("Ссылка должна быть на YouTube.")
+        return value
+
+
+class ActivityDirectionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ActivityDirection
+        fields = ('id', 'title', 'description', 'slug')
+
+
+class DepartmentImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DepartmentImage
+        fields = ('id', 'image')
+
+    def validate_image(self, image):
+        img = Image.open(image)
+        if img.format.upper() not in ALLOWED_FORMATS:
+            raise serializers.ValidationError('Допустимые форматы: JPG, JPEG, PNG')
+        return image
+
+
+class DepartmentSerializer(serializers.ModelSerializer):
+    images = DepartmentImageSerializer(many=True, read_only=True)
+    uploaded_images = serializers.ListField(
+        child=serializers.ImageField(),
+        write_only=True,
+        required=False
+    )
+
     class Meta:
         model = Departments
-        fields = ['title', 'description', 'address', 'image']
+        fields = ('id', 'title', 'description', 'address', 'images', 'uploaded_images')
+
+    def validate_uploaded_images(self, value):
+        if len(value) > 5:
+            raise serializers.ValidationError("Можно загрузить максимум 5 изображений.")
+        return value
+
+    def create(self, validated_data):
+        images_data = validated_data.pop('uploaded_images', [])
+        department = Departments.objects.create(**validated_data)
+        for image in images_data:
+            DepartmentImage.objects.create(department=department, image=image)
+        return department
+
+    def update(self, instance, validated_data):
+        images_data = validated_data.pop('uploaded_images', None)
+        instance = super().update(instance, validated_data)
+        if images_data:
+            if instance.images.count() + len(images_data) > 5:
+                raise serializers.ValidationError("Нельзя превысить лимит в 5 изображений.")
+            for image in images_data:
+                DepartmentImage.objects.create(department=instance, image=image)
+        return instance
 
 
-class ResultsListSerializers(serializers.ModelSerializer):
+class ResultsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Results
-        fields = ['title', 'description']
+        fields = ('id', 'title', 'description')
 
 
-class NewsListSerializers(serializers.ModelSerializer):
+class NewsSerializer(serializers.ModelSerializer):
     class Meta:
         model = News
-        fields = ['title', 'description', 'date']
-
+        fields = ('id', 'title', 'description', 'date', 'image', 'slug')

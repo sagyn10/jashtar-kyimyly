@@ -17,6 +17,6 @@ class LegislativeAdmin(admin.ModelAdmin):
 
 @admin.register(Management)
 class ManagementAdmin(admin.ModelAdmin):
-    list_display = ('image', 'first_name', 'last_name')
+    list_display = ('image', 'full_name', 'position')
 
 

@@ -1,7 +1,7 @@
 from pathlib import Path
 from decouple import config
 from .jazzmin import JAZZMIN_SETTINGS, JAZZMIN_UI_TWEAKS
-
+from config import ckeditor
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config('SECRET_KEY')
@@ -23,6 +23,7 @@ THIRD_PARTY_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'drf_spectacular',
+    'django_ckeditor_5',
 ]
 
 
@@ -118,6 +119,12 @@ LANGUAGES = (
 
 MODELTRANSLATION_DEFAULT_LANGUAGE = 'ru'
 MODELTRANSLATION_LANGUAGES = ('en', 'ru', 'ky')
+
+
+CKEDITOR_5_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
+CKEDITOR_5_UPLOAD_FILE_VIEW_NAME = 'ck_editor_5_upload_file'
+CKEDITOR_5_CONFIGS = ckeditor.CKEDITOR_5_CONFIGS
+
 
 TIME_ZONE = 'Asia/Bishkek'
 

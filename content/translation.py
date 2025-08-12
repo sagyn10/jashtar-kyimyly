@@ -1,6 +1,5 @@
 from modeltranslation.translator import register, TranslationOptions
-from .models import (Events, Projects, ActivityDirection, Departments, Results, News)
-
+from .models import Events, Projects, ActivityDirection, Departments, Results, News, Gallery, VideoArchive
 
 
 @register(Events)
@@ -12,6 +11,14 @@ class EventsTranslationOptions(TranslationOptions):
 class ProjectsTranslationOptions(TranslationOptions):
     fields = ('title', 'description')
 
+
+@register(Gallery)
+class GalleryTranslationOptions(TranslationOptions):
+    fields = ('title',)
+
+@register(VideoArchive)
+class VideoArchiveTranslationOptions(TranslationOptions):
+    fields = ('title',)
 
 @register(ActivityDirection)
 class ActivityDirectionTranslationOptions(TranslationOptions):
