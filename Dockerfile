@@ -1,4 +1,4 @@
-FROM python:3.12
+FROM python:3.10-slim
 
 RUN apt-get update && apt-get install -y \
     gettext \
@@ -14,9 +14,6 @@ WORKDIR /jashtar-kyimyly
 RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
-
-#RUN gunicorn --version
-
 
 EXPOSE 8000
 

@@ -1,7 +1,3 @@
-from django.shortcuts import render
-from rest_framework import generics, status, permissions
-from rest_framework.generics import ListAPIView
-from .models import Events, Projects, Gallery
 from .serializers import EventsSerializer, ProjectsSerializer, GallerySerializer
 from rest_framework import viewsets, generics, status
 from .models import *
@@ -12,7 +8,7 @@ from .serializers import (EventsSerializer,
                           DepartmentsListSerializers,
                           ResultsListSerializers,
                           NewsListSerializers)
-
+from drf_spectacular.utils import extend_schema
 
 @extend_schema(tags=['content'])
 class EventList(generics.ListAPIView):
@@ -48,36 +44,38 @@ class GalleryDetail(generics.RetrieveAPIView):
     queryset = Gallery.objects.all()
     serializer_class = GallerySerializer
 
+@extend_schema(tags=['content'])
 class ActivityDirectionList(generics.ListAPIView):
     queryset = ActivityDirection.objects.all()
     serializer_class = ActivityDirectionSerializer
 
+@extend_schema(tags=['content'])
 class DepartmentsDetailAPIView(generics.RetrieveAPIView):
     queryset = Departments.objects.all()
     serializer_class = DepartmentsListSerializers
 
-
+@extend_schema(tags=['content'])
 class DepartmentsListAPIView(generics.RetrieveAPIView):
     queryset = Departments.objects.all()
     serializer_class = DepartmentsListSerializers
 
-
+@extend_schema(tags=['content'])
 class ResultsDetailAPIView(generics.RetrieveAPIView):
     queryset = Results.objects.all()
     serializer_class = ResultsListSerializers
 
-
+@extend_schema(tags=['content'])
 class ResultsListAPIView(generics.RetrieveAPIView):
     queryset = Results.objects.all()
     serializer_class = ResultsListSerializers
 
 
-
+@extend_schema(tags=['content'])
 class NewsDetailAPIView(generics.RetrieveAPIView):
     queryset = News.objects.all()
     serializer_class = NewsListSerializers
 
-
+@extend_schema(tags=['content'])
 class NewsListAPIView(generics.RetrieveAPIView):
     queryset = News.objects.all()
     serializer_class = NewsListSerializers

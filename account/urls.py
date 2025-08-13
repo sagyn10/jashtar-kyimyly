@@ -1,10 +1,14 @@
 from django.urls import path
-from .views import RegisterViewSet, LoginViewSet
-
-register = RegisterViewSet.as_view({'post': 'create'})
-login = LoginViewSet.as_view({'post': 'create'})
+from .views import (
+    RegisterView,
+    LoginView,
+    ForgotPasswordView,
+    ConfirmResetPasswordView
+)
 
 urlpatterns = [
-    path('register/', register, name='register'),
-    path('login/', login, name='login'),
+    path('register/', RegisterView.as_view(), name='register'),
+    path('login/', LoginView.as_view(), name='login'),
+    path('forgot-password/', ForgotPasswordView.as_view(), name='forgot-password'),
+    path('reset-password/', ConfirmResetPasswordView.as_view(), name='reset-password'),
 ]
