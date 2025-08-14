@@ -18,6 +18,7 @@ CUSTOM_APPS = [
     'content',
     'about_direction',
     'account',
+    'home',
 ]
 
 THIRD_PARTY_APPS = [
