@@ -12,7 +12,7 @@ ALLOWED_HOSTS = ['38.180.136.75', 'localhost', '127.0.0.1']
 
 JAZZMIN_UI_TWEAKS = JAZZMIN_UI_TWEAKS
 
-
+FRONTEND_URL = "http://38.180.136.75"
 
 CUSTOM_APPS = [
     'content',
@@ -29,9 +29,9 @@ THIRD_PARTY_APPS = [
 
 
 INSTALLED_APPS = [
+    'modeltranslation',
     'jazzmin',
     'django_extensions',
-    'modeltranslation',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -147,6 +147,6 @@ CORS_ALLOWED_ORIGINS = [
 
 CORS_ALLOW_ALL_ORIGINS = True
 
-
+AUTH_USER_MODEL = "account.UserProfile"
 
 CORS_ALLOW_CREDENTIALS = True
