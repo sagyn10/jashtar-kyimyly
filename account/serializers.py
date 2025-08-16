@@ -1,13 +1,12 @@
 from rest_framework import serializers
-from django.contrib.auth.hashers import make_password, check_password
+from django.contrib.auth.hashers import check_password
 from .models import UserProfile, ProjectApplicationLink
+from .tokens import custom_token_generator
+from django.conf import settings
 
 
 class RegisterSerializer(serializers.ModelSerializer):
-    password_confirmation = serializers.CharField(
-        write_only=True,
-        label='Подтверждение пароля'
-    )
+    password_confirmation = serializers.CharField(write_only=True, label="Подтверждение пароля")
 
     class Meta:
         model = UserProfile
@@ -47,20 +46,16 @@ class RegisterSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         validated_data.pop('password_confirmation')
-        validated_data['password'] = make_password(validated_data['password'])
-        return UserProfile.objects.create(**validated_data)
+        password = validated_data.pop('password')
+        user = UserProfile(**validated_data)
+        user.set_password(password)
+        user.save()
+        return user
 
 
 class LoginSerializer(serializers.Serializer):
     email = serializers.EmailField(label="Электронная почта", required=True)
     password = serializers.CharField(write_only=True, label="Пароль", required=True)
-
-    def validate_email(self, value):
-        if not (value.endswith('@gmail.com') or value.endswith('@mail.ru')):
-            raise serializers.ValidationError(
-                'Email должен быть в формате example@gmail.com или example@mail.ru.'
-            )
-        return value
 
     def validate(self, data):
         email = data.get('email')
@@ -73,6 +68,9 @@ class LoginSerializer(serializers.Serializer):
 
         if not check_password(password, user.password):
             raise serializers.ValidationError("Неверный логин или пароль.")
+
+        if not user.is_active:
+            raise serializers.ValidationError("Пользователь деактивирован.")
 
         data['user'] = user
         return data
@@ -89,7 +87,6 @@ class ForgotPasswordSerializer(serializers.Serializer):
         return value
 
     def save(self):
-        # Убрана отправка email
         token = custom_token_generator.make_token(self.user)
         reset_link = f"{settings.FRONTEND_URL}/reset-password/{token}?email={self.user.email}"
         return reset_link
@@ -118,7 +115,7 @@ class ConfirmResetPasswordSerializer(serializers.Serializer):
         return data
 
     def save(self):
-        self.user.password = make_password(self.validated_data['new_password'])
+        self.user.set_password(self.validated_data['new_password'])
         self.user.save()
         return self.user
 

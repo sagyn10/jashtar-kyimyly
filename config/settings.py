@@ -13,6 +13,10 @@ JAZZMIN_UI_TWEAKS = JAZZMIN_UI_TWEAKS
 JAZZMIN_SETTINGS = JAZZMIN_SETTINGS
 
 
+FRONTEND_URL = "http://38.180.136.75"
+
+
+
 CUSTOM_APPS = [
     'content',
     'about_direction',
@@ -139,3 +143,6 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'kimazatot@gmail.com'
 EMAIL_HOST_PASSWORD = 'zygidtalayrpiygw'
+
+
+AUTH_USER_MODEL = "account.UserProfile"
