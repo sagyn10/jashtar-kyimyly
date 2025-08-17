@@ -5,7 +5,7 @@ from drf_spectacular.utils import extend_schema
 
 
 @extend_schema(tags=['about_direction'])
-class HistoryListAPIView(generics.ListAPIView):
+class HistoryListAPIView(generics.ListAPIView, ):
     queryset = History.objects.all()
     serializer_class = HistorySerializers
 

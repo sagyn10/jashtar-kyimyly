@@ -8,11 +8,11 @@ services:
       sh -c "python manage.py collectstatic --noinput &&
              python manage.py makemigrations &&
              python manage.py migrate &&
-             gunicorn jashtar-kyimyly.wsgi:application --bind 0.0.0.0:8000"
+             gunicorn config.wsgi:application --bind 0.0.0.0:8000"
     volumes:
-      - .:/jashtar-kyimyly
-      - ./back_static:/jashtar-kyimyly/back_static
-      - ./back_media:/jashtar-kyimyly/back_media
+      - .:/jashtar_kyimyly
+      - ./back_static:/jashtar_kyimyly/back_static
+      - ./back_media:/jashtar_kyimyly/back_media
       - ./sqlite_data:/app/sqlite_data
     ports:
       - "8000:8000"
@@ -40,8 +40,8 @@ services:
     container_name: nginx
     volumes:
       - ./etc/nginx.conf:/etc/nginx/nginx.conf
-      - ./back_static:/jashtar-kyimyly/back_static
-      - ./back_media:/jashtar-kyimyly/back_media
+      - ./back_static:/jashtar_kyimyly/back_static
+      - ./back_media:/jashtar_kyimyly/back_media
       - /etc/letsencrypt:/etc/letsencrypt:ro
     ports:
       - "80:80"

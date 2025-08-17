@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Banner, AboutMovement, Announcement, AnnouncementImage, News, BrandMaterial
+from .models import Banner, AboutMovement, Announcement, AnnouncementImage, BrandMaterial
 from PIL import Image
 from io import BytesIO
 from django.core.files.base import ContentFile
@@ -55,10 +55,10 @@ class AnnouncementSerializer(serializers.ModelSerializer):
         return announcement
 
 
-class NewsSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = News
-        fields = ['id', 'title', 'description', 'date', 'image']
+# class NewsSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = News
+#         fields = ['id', 'title', 'description', 'date', 'image']
 
 
 class BrandMaterialSerializer(serializers.ModelSerializer):

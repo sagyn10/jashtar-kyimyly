@@ -1,7 +1,7 @@
 from pathlib import Path
 from decouple import config
 from .jazzmin import JAZZMIN_SETTINGS, JAZZMIN_UI_TWEAKS
-from config import ckeditor
+
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config('SECRET_KEY')
@@ -11,6 +11,10 @@ ALLOWED_HOSTS = ['0.0.0.0', 'localhost', '127.0.0.1']
 
 JAZZMIN_UI_TWEAKS = JAZZMIN_UI_TWEAKS
 JAZZMIN_SETTINGS = JAZZMIN_SETTINGS
+
+
+FRONTEND_URL = "http://38.180.136.75"
+
 
 
 CUSTOM_APPS = [
@@ -24,7 +28,6 @@ THIRD_PARTY_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'drf_spectacular',
-    'django_ckeditor_5',
 ]
 
 
@@ -51,6 +54,14 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Жаштар кыймылы',
+    'DESCRIPTION': 'Описание API',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': True,
+}
+
 
 REST_FRAMEWORK = {
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
@@ -119,13 +130,7 @@ LANGUAGES = (
 )
 
 MODELTRANSLATION_DEFAULT_LANGUAGE = 'ru'
-MODELTRANSLATION_LANGUAGES = ('en', 'ru', 'ky')
-
-
-CKEDITOR_5_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
-CKEDITOR_5_UPLOAD_FILE_VIEW_NAME = 'ck_editor_5_upload_file'
-CKEDITOR_5_CONFIGS = ckeditor.CKEDITOR_5_CONFIGS
-
+MODELTRANSLATION_LANGUAGES = ('ru', 'en', 'ky')
 
 TIME_ZONE = 'Asia/Bishkek'
 
@@ -146,3 +151,6 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'kimazatot@gmail.com'
 EMAIL_HOST_PASSWORD = 'zygidtalayrpiygw'
+
+
+AUTH_USER_MODEL = "account.UserProfile"

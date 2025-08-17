@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Banner, AboutMovement, Announcement, AnnouncementImage, News, BrandMaterial
+from .models import Banner, AboutMovement, Announcement, AnnouncementImage, BrandMaterial
 
 class AnnouncementImageInline(admin.TabularInline):
     model = AnnouncementImage
@@ -19,9 +19,9 @@ class AnnouncementAdmin(admin.ModelAdmin):
     list_display = ('title', 'description', 'date')
     inlines = [AnnouncementImageInline]
 
-@admin.register(News)
-class NewsAdmin(admin.ModelAdmin):
-    list_display = ('title', 'description', 'date')
+# @admin.register(News)
+# class NewsAdmin(admin.ModelAdmin):
+#     list_display = ('title', 'description', 'date')
 
 @admin.register(BrandMaterial)
 class BrandMaterialAdmin(admin.ModelAdmin):

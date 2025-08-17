@@ -214,7 +214,8 @@ class News(models.Model):
     )
     title = models.CharField(max_length=99, verbose_name='Название')
     description = models.TextField(verbose_name='Описание')
-    date = models.ImageField(verbose_name='Дата')
+    date = models.DateField(verbose_name='Дата')
+    slug = models.SlugField(max_length=255, unique=True, blank=True)
 
 
     def __str__(self):
