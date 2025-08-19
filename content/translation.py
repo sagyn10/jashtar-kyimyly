@@ -1,5 +1,5 @@
 from modeltranslation.translator import register, TranslationOptions
-from .models import (Events, Projects, ActivityDirection, Departments, Results, News)
+from .models import (Events, Projects, ActivityDirection, Departments, Results, News, BrandMaterial)
 
 
 
@@ -31,3 +31,6 @@ class ResultsTranslationOptions(TranslationOptions):
 @register(News)
 class NewsTranslationOptions(TranslationOptions):
     fields = ('title', 'description')
+
+class BrandMaterialTranslationOptions(TranslationOptions):
+    fields = ('title', 'description',)

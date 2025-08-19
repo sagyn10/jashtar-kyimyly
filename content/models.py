@@ -165,3 +165,22 @@ class News(models.Model):
     title = models.CharField(max_length=99, verbose_name='Название')
     description = models.TextField(verbose_name='Описание')
     date = models.ImageField()
+
+
+
+class BrandMaterial(models.Model):
+    title = models.CharField(max_length=155, verbose_name='Название')
+    description = models.TextField(verbose_name='Описание')
+    slug = models.SlugField(max_length=255, unique=True, blank=True)
+    image = models.ImageField(
+        upload_to='brand_materials/',
+        validators=[FileExtensionValidator(allowed_extensions=['jpg','jpeg','png'])],
+        verbose_name='Изображение'
+    )
+
+    def __str__(self):
+        return self.title
+
+    class Meta:
+        verbose_name = 'Бренд материал'
+        verbose_name_plural = 'Бренд материалы'

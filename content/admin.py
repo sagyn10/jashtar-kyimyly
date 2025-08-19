@@ -1,6 +1,6 @@
 from django.contrib import admin
 from .models import Events, Projects, EventImage, ProjectsImage, GalleryImage, Gallery
-from .models import Events, Projects, EventImage, ProjectsImage, ActivityDirection, Departments, Results
+from .models import Events, Projects, EventImage, ProjectsImage, ActivityDirection, Departments, Results, BrandMaterial
 
 class EventImageInline(admin.TabularInline):
     model = EventImage
@@ -51,3 +51,10 @@ class DepartmentsAdmin(admin.ModelAdmin):
 @admin.register(Results)
 class ResultsAdmin(admin.ModelAdmin):
     list_display = ('title', 'description')
+
+
+@admin.register(BrandMaterial)
+class BrandMaterialAdmin(admin.ModelAdmin):
+    list_display = ('id', 'title', 'slug')
+    search_fields = ('title',)
+    prepopulated_fields = {"slug": ("title",)}

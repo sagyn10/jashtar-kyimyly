@@ -7,7 +7,7 @@ from .serializers import (EventsSerializer,
                           ActivityDirectionSerializer,
                           DepartmentsListSerializers,
                           ResultsListSerializers,
-                          NewsListSerializers)
+                          NewsListSerializers, BrandMaterialSerializer)
 from drf_spectacular.utils import extend_schema
 
 @extend_schema(tags=['content'])
@@ -79,3 +79,10 @@ class NewsDetailAPIView(generics.RetrieveAPIView):
 class NewsListAPIView(generics.RetrieveAPIView):
     queryset = News.objects.all()
     serializer_class = NewsListSerializers
+
+
+
+@extend_schema(tags=['content'])
+class BrandMaterialViewSet(viewsets.ModelViewSet):
+    queryset = BrandMaterial.objects.all()
+    serializer_class = BrandMaterialSerializer
