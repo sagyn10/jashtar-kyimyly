@@ -1,67 +1,31 @@
 from rest_framework import serializers
-from .models import Banner, AboutMovement, Announcement, AnnouncementImage, News, BrandMaterial
-from PIL import Image
-from io import BytesIO
-from django.core.files.base import ContentFile
+from .models import HomeBanner, HomeAboutMovement, HomeAnnouncement, HomeNews, HomeBrandMaterial
+from content.serializers import AnnouncementSerializer, NewsSerializer, BrandMaterialSerializer
 
-ALLOWED_FORMATS = ['JPEG', 'JPG', 'PNG']
-
-
-class BannerSerializer(serializers.ModelSerializer):
+class HomeBannerSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Banner
+        model = HomeBanner
         fields = ['id', 'image', 'description', 'cta_text', 'cta_link']
 
-
-class AboutMovementSerializer(serializers.ModelSerializer):
+class HomeAboutMovementSerializer(serializers.ModelSerializer):
     class Meta:
-        model = AboutMovement
+        model = HomeAboutMovement
         fields = ['id', 'description', 'advantage']
 
-
-class AnnouncementImageSerializer(serializers.ModelSerializer):
+class HomeAnnouncementSerializer(serializers.ModelSerializer):
+    announcement = AnnouncementSerializer()
     class Meta:
-        model = AnnouncementImage
-        fields = ['id', 'image']
+        model = HomeAnnouncement
+        fields = ['id', 'announcement']
 
-    def validate_image(self, image):
-        img = Image.open(image)
-        if img.format.upper() not in ALLOWED_FORMATS:
-            raise serializers.ValidationError('Допустимые форматы: JPG, JPEG, PNG')
-        return image
-
-
-class AnnouncementSerializer(serializers.ModelSerializer):
-    images = AnnouncementImageSerializer(many=True, required=False)
-
+class HomeNewsSerializer(serializers.ModelSerializer):
+    news = NewsSerializer()
     class Meta:
-        model = Announcement
-        fields = ['id', 'title', 'description', 'date', 'images']
+        model = HomeNews
+        fields = ['id', 'news']
 
-    def create(self, validated_data):
-        images_data = self.initial_data.getlist('images')
-        if len(images_data) > 10:
-            raise serializers.ValidationError("Можно загрузить максимум 10 изображений.")
-
-        announcement = Announcement.objects.create(
-            title=validated_data['title'],
-            description=validated_data['description'],
-            date=validated_data['date']
-        )
-
-        for image in images_data:
-            AnnouncementImage.objects.create(announcement=announcement, image=image)
-
-        return announcement
-
-
-class NewsSerializer(serializers.ModelSerializer):
+class HomeBrandMaterialSerializer(serializers.ModelSerializer):
+    brand_material = BrandMaterialSerializer()
     class Meta:
-        model = News
-        fields = ['id', 'title', 'description', 'date', 'image']
-
-
-class BrandMaterialSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = BrandMaterial
-        fields = ['id', 'title', 'file']
+        model = HomeBrandMaterial
+        fields = ['id', 'brand_material']

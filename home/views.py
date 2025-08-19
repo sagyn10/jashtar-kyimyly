@@ -1,45 +1,35 @@
 from rest_framework import generics
 from drf_spectacular.utils import extend_schema
-from .models import Banner, AboutMovement, Announcement, News, BrandMaterial
+from .models import HomeBanner, HomeAboutMovement, HomeAnnouncement, HomeNews, HomeBrandMaterial
 from .serializers import (
-    BannerSerializer,
-    AboutMovementSerializer,
-    AnnouncementSerializer,
-    NewsSerializer,
-    BrandMaterialSerializer
+    HomeBannerSerializer,
+    HomeAboutMovementSerializer,
+    HomeAnnouncementSerializer,
+    HomeNewsSerializer,
+    HomeBrandMaterialSerializer
 )
 
-@extend_schema(tags=['content'])
+@extend_schema(tags=['home'])
 class BannerList(generics.ListAPIView):
-    queryset = Banner.objects.all()
-    serializer_class = BannerSerializer
+    queryset = HomeBanner.objects.all()
+    serializer_class = HomeBannerSerializer
 
-@extend_schema(tags=['content'])
+@extend_schema(tags=['home'])
 class AboutMovementList(generics.ListAPIView):
-    queryset = AboutMovement.objects.all()
-    serializer_class = AboutMovementSerializer
+    queryset = HomeAboutMovement.objects.all()
+    serializer_class = HomeAboutMovementSerializer
 
-@extend_schema(tags=['content'])
+@extend_schema(tags=['home'])
 class AnnouncementList(generics.ListAPIView):
-    queryset = Announcement.objects.all()
-    serializer_class = AnnouncementSerializer
+    queryset = HomeAnnouncement.objects.all()
+    serializer_class = HomeAnnouncementSerializer
 
-@extend_schema(tags=['content'])
-class AnnouncementDetail(generics.RetrieveAPIView):
-    queryset = Announcement.objects.all()
-    serializer_class = AnnouncementSerializer
-
-@extend_schema(tags=['content'])
+@extend_schema(tags=['home'])
 class NewsList(generics.ListAPIView):
-    queryset = News.objects.all()
-    serializer_class = NewsSerializer
+    queryset = HomeNews.objects.all()
+    serializer_class = HomeNewsSerializer
 
-@extend_schema(tags=['content'])
-class NewsDetail(generics.RetrieveAPIView):
-    queryset = News.objects.all()
-    serializer_class = NewsSerializer
-
-@extend_schema(tags=['content'])
+@extend_schema(tags=['home'])
 class BrandMaterialList(generics.ListAPIView):
-    queryset = BrandMaterial.objects.all()
-    serializer_class = BrandMaterialSerializer
+    queryset = HomeBrandMaterial.objects.all()
+    serializer_class = HomeBrandMaterialSerializer

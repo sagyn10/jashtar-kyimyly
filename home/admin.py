@@ -1,28 +1,30 @@
 from django.contrib import admin
-from .models import Banner, AboutMovement, Announcement, AnnouncementImage, News, BrandMaterial
+from .models import HomeBanner, HomeAboutMovement, HomeAnnouncement, HomeNews, HomeBrandMaterial
 
-class AnnouncementImageInline(admin.TabularInline):
-    model = AnnouncementImage
-    extra = 0
-    max_num = 10
+@admin.register(HomeBanner)
+class HomeBannerAdmin(admin.ModelAdmin):
+    list_display = ('id', 'description', 'cta_text', 'cta_link')
+    search_fields = ('description', 'cta_text')
 
-@admin.register(Banner)
-class BannerAdmin(admin.ModelAdmin):
-    list_display = ('description', 'cta_text', 'cta_link')
+@admin.register(HomeAboutMovement)
+class HomeAboutMovementAdmin(admin.ModelAdmin):
+    list_display = ('id', 'description', 'advantage')
+    search_fields = ('description', 'advantage')
 
-@admin.register(AboutMovement)
-class AboutMovementAdmin(admin.ModelAdmin):
-    list_display = ('description', 'advantage')
+@admin.register(HomeAnnouncement)
+class HomeAnnouncementAdmin(admin.ModelAdmin):
+    list_display = ('id', 'announcement')
+    search_fields = ('announcement__title', 'announcement__description')
+    autocomplete_fields = ('announcement',)
 
-@admin.register(Announcement)
-class AnnouncementAdmin(admin.ModelAdmin):
-    list_display = ('title', 'description', 'date')
-    inlines = [AnnouncementImageInline]
+@admin.register(HomeNews)
+class HomeNewsAdmin(admin.ModelAdmin):
+    list_display = ('id', 'news')
+    search_fields = ('news__title', 'news__description')
+    autocomplete_fields = ('news',)
 
-@admin.register(News)
-class NewsAdmin(admin.ModelAdmin):
-    list_display = ('title', 'description', 'date')
-
-@admin.register(BrandMaterial)
-class BrandMaterialAdmin(admin.ModelAdmin):
-    list_display = ('title', 'file')
+@admin.register(HomeBrandMaterial)
+class HomeBrandMaterialAdmin(admin.ModelAdmin):
+    list_display = ('id', 'brand_material')
+    search_fields = ('brand_material__title',)
+    autocomplete_fields = ('brand_material',)
