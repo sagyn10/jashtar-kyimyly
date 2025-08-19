@@ -1,10 +1,10 @@
-from django.urls import path
-from .views import BannerList, AboutMovementList, AnnouncementList, NewsList, BrandMaterialList
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
+from .views import HomeContentBlockViewSet
+
+router = DefaultRouter()
+router.register(r'home-announcements', HomeContentBlockViewSet)
 
 urlpatterns = [
-    path('banners/', BannerList.as_view(), name='home-banners'),
-    path('about-movement/', AboutMovementList.as_view(), name='home-about-movement'),
-    path('announcements/', AnnouncementList.as_view(), name='home-announcements'),
-    path('news/', NewsList.as_view(), name='home-news'),
-    path('brand-materials/', BrandMaterialList.as_view(), name='home-brand-materials'),
+    path('', include(router.urls)),
 ]

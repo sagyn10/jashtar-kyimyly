@@ -1,10 +1,7 @@
-from modeltranslation.translator import register, TranslationOptions
-from .models import HomeBanner, HomeAboutMovement
+from modeltranslation.translator import translator, TranslationOptions
+from .models import HomeContentBlock
 
-@register(HomeBanner)
-class HomeBannerTranslationOptions(TranslationOptions):
-    fields = ('description', 'cta_text')
+class HomeContentBlockTranslationOptions(TranslationOptions):
+    fields = ('news', 'brand_material', 'announcement',)
 
-@register(HomeAboutMovement)
-class HomeAboutMovementTranslationOptions(TranslationOptions):
-    fields = ('description', 'advantage')
+translator.register(HomeContentBlock, HomeContentBlockTranslationOptions)
