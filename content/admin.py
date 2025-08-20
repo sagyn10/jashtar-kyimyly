@@ -1,6 +1,7 @@
 from django.contrib import admin
 from .models import Events, Projects, EventImage, ProjectsImage, GalleryImage, Gallery
 from .models import Events, Projects, EventImage, ProjectsImage, ActivityDirection, Departments, Results, BrandMaterial
+from modeltranslation.translator import register, TranslationOptions
 
 class EventImageInline(admin.TabularInline):
     model = EventImage
@@ -19,32 +20,32 @@ class GalleryImageInline(admin.TabularInline):
 
 
 @admin.register(Events)
-class EventsAdmin(admin.ModelAdmin):
+class EventsAdmin(TranslationOptions):
     list_display = ('title', 'description', 'date')
     inlines = [EventImageInline]
     exclude = ('slug',)
 
 
 @admin.register(Projects)
-class ProjectsAdmin(admin.ModelAdmin):
+class ProjectsAdmin(TranslationOptions):
     list_display = ('title', 'description')
     inlines = [ProjectImageInline]
     exclude = ('slug',)
 
 
 @admin.register(Gallery)
-class GalleryAdmin(admin.ModelAdmin):
+class GalleryAdmin(TranslationOptions):
     list_display = ('title', 'date')
     inlines = [GalleryImageInline]
     exclude = ('slug',)
     fields = ('title',)
 
 @admin.register(ActivityDirection)
-class ActivityDirectionAdin(admin.ModelAdmin):
+class ActivityDirectionAdin(TranslationOptions):
     list_display = ('title', 'description')
 
 @admin.register(Departments)
-class DepartmentsAdmin(admin.ModelAdmin):
+class DepartmentsAdmin(TranslationOptions):
     list_display = ('title', 'description', 'address', 'image')
 
 
