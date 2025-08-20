@@ -5,7 +5,7 @@ class HomeContentBlock(models.Model):
     news = models.ForeignKey(
         News,
         on_delete=models.CASCADE,
-        related_name='home_blocks',
+        related_name='home_news',
         blank=True,
         null=True,
         verbose_name='Новости'
@@ -13,7 +13,7 @@ class HomeContentBlock(models.Model):
     brand_material = models.ForeignKey(
         BrandMaterial,
         on_delete=models.CASCADE,
-        related_name='home_blocks',
+        related_name='home_brand_materials',
         blank=True,
         null=True,
         verbose_name='Бренд материалы'
@@ -21,7 +21,7 @@ class HomeContentBlock(models.Model):
     announcement = models.ForeignKey(
         ActivityDirection,
         on_delete=models.CASCADE,
-        related_name='home_blocks',
+        related_name='home_announcements',
         blank=True,
         null=True,
         verbose_name='Анонс мероприятия'
@@ -31,7 +31,6 @@ class HomeContentBlock(models.Model):
     class Meta:
         verbose_name = 'Блок контента на главной'
         verbose_name_plural = 'Блоки контента на главной'
-        ordering = ['order']
 
     def __str__(self):
         blocks = []

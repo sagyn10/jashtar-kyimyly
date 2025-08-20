@@ -57,4 +57,3 @@ class ResultsAdmin(admin.ModelAdmin):
 class BrandMaterialAdmin(admin.ModelAdmin):
     list_display = ('id', 'title', 'slug')
     search_fields = ('title',)
-    prepopulated_fields = {"slug": ("title",)}

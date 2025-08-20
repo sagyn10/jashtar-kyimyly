@@ -1,10 +1,6 @@
-from django.urls import path, include
-from rest_framework.routers import DefaultRouter
-from .views import HomeContentBlockViewSet
+from django.contrib import admin
+from .models import HomeContentBlock
 
-router = DefaultRouter()
-router.register(r'home-content-blocks', HomeContentBlockViewSet)
-
-urlpatterns = [
-    path('', include(router.urls)),
-]
+@admin.register(HomeContentBlock)
+class HomeContentBlockAdmin(admin.ModelAdmin):
+    list_display = ('id', 'news', 'brand_material', 'announcement', 'order')
