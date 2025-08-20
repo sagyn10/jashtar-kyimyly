@@ -77,7 +77,7 @@ class ProjectsImage(models.Model):
 
 class Gallery(models.Model):
     title = models.CharField(max_length=99, verbose_name='Название')
-    date = models.DateField(verbose_name="Дата")
+    date = models.DateField(verbose_name="Дата", null=True, blank=True)
 
     class Meta:
         verbose_name = 'Галерея'
@@ -164,7 +164,7 @@ class News(models.Model):
     )
     title = models.CharField(max_length=99, verbose_name='Название')
     description = models.TextField(verbose_name='Описание')
-    date = models.ImageField()
+    date = models.DateField('verbose_name=Дата')
 
 
 
