@@ -1,9 +1,10 @@
 from io import BytesIO
 from PIL import Image
-
 from django.core.files.base import ContentFile
 from django.db import models
-from django.core.validators import FileExtensionValidator
+from django.core.validators import FileExtensionValidator, URLValidator
+from jsonschema.exceptions import ValidationError
+
 from _common.choices.content import EventStatus
 
 
@@ -81,7 +82,7 @@ class Gallery(models.Model):
 
     class Meta:
         verbose_name = 'Галерея'
-        verbose_name_plural = 'Галереи'
+        verbose_name_plural = 'Галерея'
 
 
 class GalleryImage(models.Model):
@@ -115,6 +116,26 @@ class GalleryImage(models.Model):
         verbose_name_plural = 'Фотографии галереи'
 
 
+class VideoArchive(models.Model):
+    title = models.CharField(max_length=99, verbose_name='Название видеоматериала')
+    video_url = models.URLField(
+        verbose_name='Ссылка на видеоматериал',
+        validators=[
+            URLValidator(
+                schemes=['https'],
+                regex=r'^https?://(www\.)?(youtube\.com|youtu\.be)/.+$'
+                )
+            ]
+        )
+
+    def __str__(self):
+        return self.title
+
+    class Meta:
+        verbose_name = 'Видеоархив'
+        verbose_name_plural = 'Видеоархивы'
+
+
 class ActivityDirection(models.Model):
     title = models.CharField("Название направления", max_length=255,  blank=False,null=False)
     description = models.TextField('Описание деятельности', blank=False, null=False)
@@ -143,6 +164,35 @@ class Departments(models.Model):
         verbose_name_plural = 'Региональные отделения'
 
 
+class DepartmentImage(models.Model):
+    department = models.ForeignKey(
+        Departments,
+        related_name='images',
+        on_delete=models.CASCADE,
+        verbose_name="Отделение"
+    )
+    image = models.ImageField(
+        upload_to='department_photos/',
+        validators=[FileExtensionValidator(allowed_extensions=['jpg', 'jpeg', 'png'])],
+        verbose_name="Фотография"
+    )
+
+    def save(self, *args, **kwargs):
+        if self.department.images.count() >= 5:
+            raise ValidationError("Нельзя добавить больше 5 изображений для отделения.")
+        if self.image:
+            img = Image.open(self.image)
+            img = img.convert('RGB')
+            output = BytesIO()
+            img.save(output, format='JPEG', quality=75)
+            output.seek(0)
+            self.image.save(self.image.name, ContentFile(output.read()), save=False)
+        super().save(*args, **kwargs)
+
+    class Meta:
+        verbose_name = 'Фотография отделения'
+        verbose_name_plural = 'Фотографии отделения'
+
 class Results(models.Model):
     title = models.TextField(max_length=255, verbose_name='Заголовок')
     description = models.TextField(verbose_name='Описание') #RichText
@@ -164,4 +214,13 @@ class News(models.Model):
     )
     title = models.CharField(max_length=99, verbose_name='Название')
     description = models.TextField(verbose_name='Описание')
-    date = models.ImageField()
+    date = models.DateField(verbose_name='Дата')
+    slug = models.SlugField(max_length=255, unique=True, blank=True)
+
+
+    def __str__(self):
+        return f'{self.title}'
+
+    class Meta:
+        verbose_name = 'Новость'
+        verbose_name_plural = 'Новости'

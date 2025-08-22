@@ -1,6 +1,6 @@
 from django.urls import path
 from .models import Gallery
-from .views import ProjectList, EventList, EventsDetail, ProjectsDetail, GalleryList, GalleryDetail
+from .views import ProjectList, EventList, EventsDetail, ProjectsDetail, GalleryList, GalleryDetail, VideoArchiveList, VideoArchiveDetail
 from django.urls import path, include
 from rest_framework import routers
 from .views import (ProjectList, EventList, EventsDetail, ProjectsDetail, ActivityDirectionList,
@@ -21,6 +21,10 @@ urlpatterns = [
 
     path('images/', GalleryList.as_view(), name='images'),
     path('images/<int:pk>/', GalleryDetail.as_view(), name='images'),
+
+    path('video-archives/', VideoArchiveList.as_view(), name='video-archive-list'),
+    path('video-archives/<int:id>/', VideoArchiveDetail.as_view(), name='video-archive-detail'),
+
     path('activity_direction/', ActivityDirectionList.as_view(), name='activity-direction'),
 
     path('departments/', DepartmentsListAPIView.as_view(), name='departments_list'),

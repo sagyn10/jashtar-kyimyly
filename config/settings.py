@@ -28,6 +28,7 @@ THIRD_PARTY_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'drf_spectacular',
+    'django_rest_passwordreset'
 ]
 
 
@@ -55,8 +56,16 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Жаштар кыймылы',
+    'DESCRIPTION': 'Описание API',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': True,
+}
+
+
 REST_FRAMEWORK = {
-    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema'
 }
 
 ROOT_URLCONF = 'config.urls'
@@ -122,7 +131,7 @@ LANGUAGES = (
 )
 
 MODELTRANSLATION_DEFAULT_LANGUAGE = 'ru'
-MODELTRANSLATION_LANGUAGES = ('en', 'ru', 'ky')
+MODELTRANSLATION_LANGUAGES = ('ru', 'en', 'ky')
 
 TIME_ZONE = 'Asia/Bishkek'
 
@@ -141,8 +150,8 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'kimazatot@gmail.com'
-EMAIL_HOST_PASSWORD = 'zygidtalayrpiygw'
+EMAIL_HOST_USER = 'ryskulovaslan96@gmail.com'
+EMAIL_HOST_PASSWORD = 'uovk zbti wbzg xquf'
 
 
 AUTH_USER_MODEL = "account.UserProfile"
