@@ -1,15 +1,9 @@
 from django.db import models
 from django.core.validators import FileExtensionValidator
-
+from content.models import News, Events
 
 
 class Banner(models.Model):
-    image = models.FileField(
-        upload_to='banners/',
-        verbose_name="Изображение (SVG)",
-        validators=[FileExtensionValidator(allowed_extensions=['svg'])],
-        help_text="Загружайте только изображения в формате .svg"
-    )
     description = models.CharField(max_length=255, verbose_name='Текстовое описание')
     cta_text = models.CharField(max_length=255, verbose_name='Текст кнопки (СТА)', default='Вступить в движение')
     cta_link = models.URLField(verbose_name='Ссылка на Google Forms')
@@ -20,53 +14,34 @@ class Banner(models.Model):
         verbose_name_plural = 'Баннеры'
 
 
+class BannerImage(models.Model):
+    banner = models.ForeignKey(Banner, on_delete=models.CASCADE, related_name='Баннеры')
+    image = models.FileField(
+        upload_to='banners/',
+        verbose_name="Изображение (SVG)",
+        validators=[FileExtensionValidator(allowed_extensions=['svg'])],
+        help_text="Загружайте только изображения в формате .svg"
+    )
+
+    class Meta:
+        verbose_name = "Изображение баннера"
+        verbose_name_plural = "Изображения баннеров"
+
+
 class AboutMovement(models.Model):
     description = models.CharField(max_length=155, verbose_name='Описание')
-    advantage = models.TextField(verbose_name='Преимущество', blank=True, null=True)
-
 
     class Meta:
         verbose_name = 'О движении'
         verbose_name_plural = 'О движении'
 
 
-class Announcement(models.Model):
-    title = models.CharField(max_length=255, verbose_name='Название мероприятия')
-    description = models.TextField(verbose_name='Описание мероприятия')
-    date = models.DateField(verbose_name='Дата проведения')
-
+class Advantage(models.Model):
+    text = models.TextField(max_length=400, verbose_name='Преимущество')
 
     class Meta:
-        verbose_name = "Анонс мероприятия"
-        verbose_name_plural = "Анонсы мероприятий"
-
-
-class AnnouncementImage(models.Model):
-    announcement = models.ForeignKey(Announcement ,on_delete=models.CASCADE, related_name='images', verbose_name='Анонс')
-    image = models.ImageField(upload_to='announcement_photos/',
-        validators=[FileExtensionValidator(allowed_extensions=['jpg', 'jpeg', 'png'])],
-        verbose_name="Изображение анонса")
-
-
-    class Meta:
-        verbose_name = "Изображение анонса"
-        verbose_name_plural = "Изображения анонсов"
-
-
-
-class News(models.Model):
-    title = models.CharField(max_length=255, verbose_name='Заголовок')
-    description = models.TextField(verbose_name="Описание")
-    date = models.DateField(verbose_name="Дата публикации")
-    image = models.ImageField(
-        upload_to='news_photos/',
-        validators=[FileExtensionValidator(allowed_extensions=['jpg', 'jpeg', 'png'])],
-        verbose_name="Изображение новости"
-    )
-
-    class Meta:
-        verbose_name = "Новость"
-        verbose_name_plural = "Новости"
+        verbose_name = 'Преимущество'
+        verbose_name_plural = 'Преимущества'
 
 
 class BrandMaterial(models.Model):

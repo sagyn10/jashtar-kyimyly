@@ -1,8 +1,9 @@
 from rest_framework import serializers
-from .models import Banner, AboutMovement, Announcement, AnnouncementImage, BrandMaterial
+from .models import Banner, AboutMovement, BrandMaterial, Advantage
 from PIL import Image
 from io import BytesIO
 from django.core.files.base import ContentFile
+from content.models import News, Events
 
 ALLOWED_FORMATS = ['JPEG', 'JPG', 'PNG']
 
@@ -16,52 +17,36 @@ class BannerSerializer(serializers.ModelSerializer):
 class AboutMovementSerializer(serializers.ModelSerializer):
     class Meta:
         model = AboutMovement
-        fields = ['id', 'description', 'advantage']
+        fields = ['id', 'description']
 
-
-class AnnouncementImageSerializer(serializers.ModelSerializer):
+class AdvantageSerializer(serializers.ModelSerializer):
     class Meta:
-        model = AnnouncementImage
-        fields = ['id', 'image']
-
-    def validate_image(self, image):
-        img = Image.open(image)
-        if img.format.upper() not in ALLOWED_FORMATS:
-            raise serializers.ValidationError('Допустимые форматы: JPG, JPEG, PNG')
-        return image
-
-
-class AnnouncementSerializer(serializers.ModelSerializer):
-    images = AnnouncementImageSerializer(many=True, required=False)
-
-    class Meta:
-        model = Announcement
-        fields = ['id', 'title', 'description', 'date', 'images']
-
-    def create(self, validated_data):
-        images_data = self.initial_data.getlist('images')
-        if len(images_data) > 10:
-            raise serializers.ValidationError("Можно загрузить максимум 10 изображений.")
-
-        announcement = Announcement.objects.create(
-            title=validated_data['title'],
-            description=validated_data['description'],
-            date=validated_data['date']
-        )
-
-        for image in images_data:
-            AnnouncementImage.objects.create(announcement=announcement, image=image)
-
-        return announcement
-
-
-# class NewsSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = News
-#         fields = ['id', 'title', 'description', 'date', 'image']
+        model = Advantage
+        fields = ['id', 'text']
 
 
 class BrandMaterialSerializer(serializers.ModelSerializer):
     class Meta:
         model = BrandMaterial
         fields = ['id', 'title', 'file']
+
+
+class NewsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = News
+        fields = ['id', 'title', 'description', 'date', 'image']
+
+
+class EventsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Events
+        fields = ['id', 'title', 'description', 'date', 'location']
+
+
+class HomePageSerializer(serializers.Serializer):
+    banners = BannerSerializer(many=True)
+    about = AboutMovementSerializer(many=True)
+    advantages = AdvantageSerializer(many=True)
+    materials = BrandMaterialSerializer(many=True)
+    news = NewsSerializer(many=True)
+    events = EventsSerializer(many=True)

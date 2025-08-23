@@ -1,10 +1,5 @@
 from django.contrib import admin
-from .models import Banner, AboutMovement, Announcement, AnnouncementImage, BrandMaterial
-
-class AnnouncementImageInline(admin.TabularInline):
-    model = AnnouncementImage
-    extra = 0
-    max_num = 10
+from .models import Banner, AboutMovement, BrandMaterial
 
 @admin.register(Banner)
 class BannerAdmin(admin.ModelAdmin):
@@ -12,12 +7,7 @@ class BannerAdmin(admin.ModelAdmin):
 
 @admin.register(AboutMovement)
 class AboutMovementAdmin(admin.ModelAdmin):
-    list_display = ('description', 'advantage')
-
-@admin.register(Announcement)
-class AnnouncementAdmin(admin.ModelAdmin):
-    list_display = ('title', 'description', 'date')
-    inlines = [AnnouncementImageInline]
+    list_display = ('description',)
 
 # @admin.register(News)
 # class NewsAdmin(admin.ModelAdmin):
