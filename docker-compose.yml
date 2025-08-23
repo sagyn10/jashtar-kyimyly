@@ -3,7 +3,7 @@ version: '3'
 services:
   web:
     build: .
-    container_name: django-app
+    container_name: web
     command: >
       sh -c "python manage.py collectstatic --noinput &&
              python manage.py makemigrations &&
@@ -15,7 +15,7 @@ services:
       - ./back_media:/jashtar_kyimyly/back_media
       - ./sqlite_data:/app/sqlite_data
     ports:
-      - "8000:8000"
+      - "8001:8000"
     environment:
       - DJANGO_SETTINGS_MODULE=config.settings
     depends_on:
