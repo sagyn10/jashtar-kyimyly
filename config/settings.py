@@ -28,6 +28,7 @@ THIRD_PARTY_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'drf_spectacular',
+    'django_rest_passwordreset'
 ]
 
 
@@ -64,7 +65,7 @@ SPECTACULAR_SETTINGS = {
 
 
 REST_FRAMEWORK = {
-    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema'
 }
 
 ROOT_URLCONF = 'config.urls'
@@ -149,8 +150,8 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'kimazatot@gmail.com'
-EMAIL_HOST_PASSWORD = 'zygidtalayrpiygw'
+EMAIL_HOST_USER = 'ryskulovaslan96@gmail.com'
+EMAIL_HOST_PASSWORD = 'uovk zbti wbzg xquf'
 
 
 AUTH_USER_MODEL = "account.UserProfile"
