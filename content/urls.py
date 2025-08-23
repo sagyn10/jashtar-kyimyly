@@ -5,10 +5,9 @@ from django.urls import path, include
 from rest_framework import routers
 from .views import (ProjectList, EventList, EventsDetail, ProjectsDetail, ActivityDirectionList,
                     DepartmentsListAPIView,DepartmentsDetailAPIView,
-                    ResultsListAPIView, ResultsDetailAPIView, NewsDetailAPIView, NewsListAPIView, BrandMaterialViewSet)
+                    ResultsListAPIView, ResultsDetailAPIView, NewsDetailAPIView, NewsListAPIView)
 
 router =routers.DefaultRouter()
-router.register(r'brand-materials', BrandMaterialViewSet, basename='brandmaterial')
 
 
 
