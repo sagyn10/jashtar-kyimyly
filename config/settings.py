@@ -1,18 +1,21 @@
 from pathlib import Path
 from decouple import config
 from .jazzmin import JAZZMIN_SETTINGS, JAZZMIN_UI_TWEAKS
-from config import ckeditor
+
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config('SECRET_KEY')
 
 DEBUG = True
-#ALLOWED_HOSTS = ['0.0.0.0', 'localhost', '127.0.0.1']
-ALLOWED_HOSTS = ['38.180.136.75', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['0.0.0.0', 'localhost', '127.0.0.1']
 
 JAZZMIN_UI_TWEAKS = JAZZMIN_UI_TWEAKS
+JAZZMIN_SETTINGS = JAZZMIN_SETTINGS
+
 
 FRONTEND_URL = "http://38.180.136.75"
+
+
 
 CUSTOM_APPS = [
     'content',
@@ -25,14 +28,13 @@ THIRD_PARTY_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'drf_spectacular',
-    'django_ckeditor_5',
+    'django_rest_passwordreset'
 ]
 
 
 INSTALLED_APPS = [
     'modeltranslation',
     'jazzmin',
-    'django_extensions',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -52,12 +54,18 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
-    'django.middleware.common.CommonMiddleware',
 ]
 
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Жаштар кыймылы',
+    'DESCRIPTION': 'Описание API',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': True,
+}
+
+
 REST_FRAMEWORK = {
-    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema'
 }
 
 ROOT_URLCONF = 'config.urls'
@@ -103,11 +111,16 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-STATIC_URL = '/static/'
+STATIC_URL = 'static/'
 STATIC_ROOT = BASE_DIR / 'back_static'
+STATICFILES_DIRS = [
+    BASE_DIR / 'static',
+    # BASE_DIR / 'locale_static',
+]
 
-MEDIA_URL = '/media/'
+MEDIA_URL = '/back_media/'
 MEDIA_ROOT = BASE_DIR / 'back_media'
+
 
 
 LANGUAGES = (
@@ -118,13 +131,7 @@ LANGUAGES = (
 )
 
 MODELTRANSLATION_DEFAULT_LANGUAGE = 'ru'
-MODELTRANSLATION_LANGUAGES = ('en', 'ru', 'ky')
-
-
-CKEDITOR_5_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
-CKEDITOR_5_UPLOAD_FILE_VIEW_NAME = 'ck_editor_5_upload_file'
-CKEDITOR_5_CONFIGS = ckeditor.CKEDITOR_5_CONFIGS
-
+MODELTRANSLATION_LANGUAGES = ('ru', 'en', 'ky')
 
 TIME_ZONE = 'Asia/Bishkek'
 
@@ -135,25 +142,16 @@ USE_TZ = True
 USE_L10N = True
 
 
+STATIC_URL = 'static/'
+
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'kimazatot@gmail.com'
-EMAIL_HOST_PASSWORD = 'zygidtalayrpiygw'
+EMAIL_HOST_USER = 'ryskulovaslan96@gmail.com'
+EMAIL_HOST_PASSWORD = 'uovk zbti wbzg xquf'
 
-
-
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
-]
-
-
-
-CORS_ALLOW_ALL_ORIGINS = True
 
 AUTH_USER_MODEL = "account.UserProfile"
-
-CORS_ALLOW_CREDENTIALS = True

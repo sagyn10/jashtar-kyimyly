@@ -1,14 +1,7 @@
-from django.urls import path
-from .views import (
-    RegisterView,
-    LoginView,
-    ForgotPasswordView,
-    ConfirmResetPasswordView
-)
+from django.urls import path, include
+from account.views import verify_reset_code
 
 urlpatterns = [
-    path('register/', RegisterView.as_view(), name='register'),
-    path('login/', LoginView.as_view(), name='login'),
-    path('forgot-password/', ForgotPasswordView.as_view(), name='forgot-password'),
-    path('reset-password/', ConfirmResetPasswordView.as_view(), name='reset-password'),
+    path('password_reset/verify_code/', verify_reset_code, name='verify_reset_code'),
+    path('password_reset/', include('django_rest_passwordreset.urls', namespace='password_reset')),
 ]

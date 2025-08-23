@@ -1,28 +1,62 @@
-version: '3.8'
+version: '3'
 
 services:
   web:
     build: .
-    command: sh -c "python manage.py collectstatic --noinput && gunicorn config.wsgi:application -w 4 -b 0.0.0.0:8000"
+    container_name: web
+    command: >
+      sh -c "python manage.py collectstatic --noinput &&
+             python manage.py makemigrations &&
+             python manage.py migrate &&
+             gunicorn config.wsgi:application --bind 0.0.0.0:8000"
     volumes:
-      - ./back_media:/app/back_media
-      - ./back_static:/app/back_static
-    env_file:
-      - .env
+      - .:/jashtar_kyimyly
+      - ./back_static:/jashtar_kyimyly/back_static
+      - ./back_media:/jashtar_kyimyly/back_media
+      - ./sqlite_data:/app/sqlite_data
+    ports:
+      - "8001:8000"
+    environment:
+      - DJANGO_SETTINGS_MODULE=config.settings
+    depends_on:
+      - db
+    networks:
+      - webnet
+
+  db:
+    image: postgres:latest
+    restart: always
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - webnet
 
   nginx:
     image: nginx:alpine
+    container_name: nginx
+    volumes:
+      - ./etc/nginx.conf:/etc/nginx/nginx.conf
+      - ./back_static:/jashtar_kyimyly/back_static
+      - ./back_media:/jashtar_kyimyly/back_media
+      - /etc/letsencrypt:/etc/letsencrypt:ro
     ports:
       - "80:80"
       - "443:443"
-    volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
-      - ./back_media:/app/back_media
-      - ./back_static:/app/back_static
     depends_on:
       - web
-      - ./etc/nginx.conf:/etc/nginx/nginx.conf
-      - ./back_media:/app/back_media
-      - ./back_static:/app/back_static
-    depends_on:
-      - web
+    networks:
+      - webnet
+
+networks:
+  webnet:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  static_volume:
+  media_volume:
+  sqlite_data:

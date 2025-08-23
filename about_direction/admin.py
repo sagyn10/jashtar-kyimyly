@@ -1,4 +1,6 @@
 from django.contrib import admin
+from modeltranslation.admin import TranslationAdmin, TranslationTabularInline
+from _common.mixins import TranslatorMediaMixin
 from .models import History, Goals, Legislative, Management
 
 @admin.register(History)
@@ -17,6 +19,8 @@ class LegislativeAdmin(admin.ModelAdmin):
 
 @admin.register(Management)
 class ManagementAdmin(admin.ModelAdmin):
+    list_display = ('image', 'full_name', 'position')
+class ManagementAdmin(TranslatorMediaMixin, TranslationAdmin):
     list_display = ('image', 'full_name', 'position')
 
 

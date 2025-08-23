@@ -1,6 +1,20 @@
 from django.contrib import admin
-from .models import HomeContentBlock
+from modeltranslation.admin import TranslationAdmin, TranslationTabularInline
+from _common.mixins import TranslatorMediaMixin
+from .models import Banner, AboutMovement, BrandMaterial
 
-@admin.register(HomeContentBlock)
-class HomeContentBlockAdmin(admin.ModelAdmin):
-    list_display = ('id', 'news', 'brand_material', 'announcement', 'order')
+@admin.register(Banner)
+class BannerAdmin(TranslatorMediaMixin, TranslationAdmin):
+    list_display = ('description', 'cta_text', 'cta_link')
+
+@admin.register(AboutMovement)
+class AboutMovementAdmin(TranslatorMediaMixin, TranslationAdmin):
+    list_display = ('description',)
+
+# @admin.register(News)
+# class NewsAdmin(admin.ModelAdmin):
+#     list_display = ('title', 'description', 'date')
+
+@admin.register(BrandMaterial)
+class BrandMaterialAdmin(TranslatorMediaMixin, TranslationAdmin):
+    list_display = ('title', 'file')

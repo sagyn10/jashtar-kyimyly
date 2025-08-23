@@ -24,4 +24,4 @@ class LegislativeListSerializers(serializers.ModelSerializer):
 class ManagementListSerializers(serializers.ModelSerializer):
     class Meta:
         model = Management
-        fields = ['first_name', 'last_name']
+        fields = ['full_name', 'image', 'position']
