@@ -3,19 +3,20 @@ services:
     build: .
     container_name: web
     command: >
-      sh -c "python manage.py makemigrations &&
-             python manage.py migrate &&
+      sh -c "python manage.py migrate --noinput &&
              gunicorn config.wsgi:application --bind 0.0.0.0:8000"
     volumes:
-      - .:/jashtar_kyimyly
-      - ./back_static:/jashtar_kyimyly/back_static
-      - ./back_media:/jashtar_kyimyly/back_media
+      - .:/app
+      - ./back_static:/app/back_static
+      - ./back_media:/app/back_media
       - ./sqlite_data:/app/sqlite_data
-    ports:
-      - "8000:8000"
+    expose:
+      - "8000"
     environment:
-      - DJANGO_SETTINGS_MODULE=config.settings.settings
+      - DJANGO_SETTINGS_MODULE=config.settings
       - ALLOWED_HOSTS=${ALLOWED_HOSTS}
+    depends_on:
+      - db
     networks:
       - webnet
 
@@ -24,14 +25,26 @@ services:
     container_name: nginx
     volumes:
       - ./etc/nginx.conf:/etc/nginx/nginx.conf
-      - ./back_static:/jashtar_kyimyly/back_static
-      - ./back_media:/jashtar_kyimyly/back_media
+      - ./back_static:/app/back_static
+      - ./back_media:/app/back_media
       - /etc/letsencrypt:/etc/letsencrypt:ro
     ports:
       - "80:80"
       - "443:443"
     depends_on:
       - web
+    networks:
+      - webnet
+
+  db:
+    image: postgres:latest
+    container_name: db
+    volumes:
+      - ./sqlite_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=jashtar_kyimyly
+      - POSTGRES_USER=youruser
+      - POSTGRES_PASSWORD=yourpassword
     networks:
       - webnet
 
