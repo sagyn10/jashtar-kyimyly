@@ -9,8 +9,6 @@ SECRET_KEY = config('SECRET_KEY', default='django-insecure-default-key')
 DEBUG = False
 ALLOWED_HOSTS = ['38.180.136.75', 'localhost', '127.0.0.1']
 
-JAZZMIN_UI_TWEAKS = JAZZMIN_UI_TWEAKS
-JAZZMIN_SETTINGS = JAZZMIN_SETTINGS
 
 AUTH_USER_MODEL = 'account.UserProfile'
 
