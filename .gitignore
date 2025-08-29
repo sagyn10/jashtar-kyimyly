@@ -1,34 +1,41 @@
-venv/
-.env
-.venv/
-env
-
+# Python
 *.pyc
+__pycache__/
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
 
+# Django
+*.log
+*.pot
+*.pyc
+__pycache__/
+local_settings.py
 db.sqlite3
-
-static/
-staticfiles/
-sqlite_data/
-
-back_media/
-back_static/
-
 media/
 
+# Static files
+staticfiles/
+back_static/
+back_media/
 
+# IDEs
 .idea/
 .vscode/
-pycharm/
+*.sublime-project
+*.sublime-workspace
 
-local_settings.py
+# Environment
+.env
 
-*.log
+# Database
+*.sqlite3
 
-__pycache__/
-**/migrations/**
-!**/migrations/__init__.py
-
-*.pem
-*.key
-*.crt
+# Misc
+.DS_Store
+*.swp
