@@ -11,7 +11,7 @@ from _common.choices.content import EventStatus
 class Events(models.Model):
     title = models.CharField(max_length=99, verbose_name='Название мероприятия')
     description = models.TextField(verbose_name='Описание мероприятия')
-    slug = models.SlugField(max_length=255, unique=True, blank=True)
+    slug = models.SlugField(max_length=255, unique=True, blank=True, editable=False)
     date = models.DateField(verbose_name="Дата")
     event_status = models.CharField(
         max_length=255,
@@ -48,7 +48,7 @@ class EventImage(models.Model):
 class Projects(models.Model):
     title = models.CharField(max_length=155, verbose_name='Название проекта')
     description = models.TextField(verbose_name='Описание проекта')
-    slug = models.SlugField(max_length=255, unique=True, blank=True)
+    slug = models.SlugField(max_length=255, unique=True, blank=True, editable=False)
 
     def __str__(self):
         return self.title
@@ -215,8 +215,7 @@ class News(models.Model):
     title = models.CharField(max_length=99, verbose_name='Название')
     description = models.TextField(verbose_name='Описание')
     date = models.DateField(verbose_name='Дата')
-    slug = models.SlugField(max_length=255, unique=True, blank=True)
-
+    slug = models.SlugField(max_length=255, unique=True, blank=True, editable=False)
 
     def __str__(self):
         return f'{self.title}'
