@@ -17,7 +17,7 @@ from account.models import UserProfile
 if not UserProfile.objects.filter(is_superuser=True).exists():
     UserProfile.objects.create_superuser(
         email=settings.SUPERUSER_EMAIL,
-        full_name="Admin",
+        full_name="admin",
         password=settings.SUPERUSER_PASSWORD
     )
     print("✅ Суперюзер создан: admin / 1")
