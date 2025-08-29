@@ -8,7 +8,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config('SECRET_KEY')
 
 DEBUG = True
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
+ALLOWED_HOSTS = ['38.180.136.75', 'localhost', '127.0.0.1']
 
 JAZZMIN_UI_TWEAKS = JAZZMIN_UI_TWEAKS
 JAZZMIN_SETTINGS = JAZZMIN_SETTINGS
