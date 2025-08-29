@@ -17,8 +17,6 @@ services:
     environment:
       - DJANGO_SETTINGS_MODULE=config.settings
       - ALLOWED_HOSTS=${ALLOWED_HOSTS}
-    depends_on:
-      - db
     networks:
       - webnet
 
