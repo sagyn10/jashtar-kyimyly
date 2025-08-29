@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 from decouple import config
 from .jazzmin import JAZZMIN_SETTINGS, JAZZMIN_UI_TWEAKS
