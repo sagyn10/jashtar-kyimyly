@@ -10,7 +10,6 @@ DEBUG = False
 ALLOWED_HOSTS = ['38.180.136.75', 'localhost', '127.0.0.1']
 
 INSTALLED_APPS = [
-    'modeltranslation',
     'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -19,15 +18,16 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    'content',
-    'about_direction',
-    'account',
-    'home',
-
     'rest_framework',
     'rest_framework.authtoken',
     'drf_spectacular',
     'django_rest_passwordreset',
+    'modeltranslation',
+
+    'content',
+    'about_direction',
+    'account',
+    'home',
 ]
 
 MIDDLEWARE = [
