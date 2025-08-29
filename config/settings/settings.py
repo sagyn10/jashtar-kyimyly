@@ -7,7 +7,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config('SECRET_KEY')
 
 DEBUG = True
-ALLOWED_HOSTS = ['0.0.0.0', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['0.0.0.0', '0.0.0.0:8000', 'localhost', '127.0.0.1']
 
 JAZZMIN_UI_TWEAKS = JAZZMIN_UI_TWEAKS
 JAZZMIN_SETTINGS = JAZZMIN_SETTINGS
@@ -92,6 +92,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
+
     }
 }
 

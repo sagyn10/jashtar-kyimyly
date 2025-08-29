@@ -9,11 +9,13 @@ db.sqlite3
 
 static/
 staticfiles/
+sqlite_data/
+
+back_media/
+back_static/
 
 media/
 
-back_static
-back_media
 
 .idea/
 .vscode/
