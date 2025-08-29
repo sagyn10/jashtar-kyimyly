@@ -5,12 +5,12 @@ from decouple import config
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = config('SECRET_KEY', default='django-insecure-default-key')
-DEBUG = config('DEBUG', default=False, cast=bool)
-ALLOWED_HOSTS = config(
-    'ALLOWED_HOSTS',
-    default='localhost,127.0.0.1',
-    cast=lambda v: [s.strip() for s in v.split(',')]
-)
+
+DEBUG = False
+ALLOWED_HOSTS = ['38.180.136.75', 'localhost', '127.0.0.1']
+
+JAZZMIN_UI_TWEAKS = JAZZMIN_UI_TWEAKS
+JAZZMIN_SETTINGS = JAZZMIN_SETTINGS
 
 AUTH_USER_MODEL = 'account.UserProfile'
 
