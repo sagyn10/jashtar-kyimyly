@@ -10,6 +10,7 @@ from .views import (ProjectList, EventList, EventsDetail, ProjectsDetail, Activi
 router =routers.DefaultRouter()
 
 
+
 urlpatterns = [
     path('', include(router.urls)),
 
