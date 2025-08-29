@@ -8,7 +8,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config('SECRET_KEY')
 DEBUG = config('DEBUG', default=False, cast=bool)
 
-ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='38.180.136.75,localhost,127.0.0.1', cast=lambda v: [s.strip() for s in v.split(',')])
+ALLOWED_HOSTS = config(
+    'ALLOWED_HOSTS',
+    default='localhost,127.0.0.1',
+    cast=lambda v: [s.strip() for s in v.split(',')]
+)
+
+AUTH_USER_MODEL = 'account.UserProfile'
 
 JAZZMIN_UI_TWEAKS = JAZZMIN_UI_TWEAKS
 JAZZMIN_SETTINGS = JAZZMIN_SETTINGS
@@ -152,4 +158,3 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'ryskulovaslan96@gmail.com'
 EMAIL_HOST_PASSWORD = 'uovkzbtiwbzgxquf'
-

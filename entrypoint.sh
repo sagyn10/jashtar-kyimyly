@@ -11,12 +11,14 @@ echo "👤 Создаем суперюзера, если его нет..."
 python manage.py shell <<EOF
 import django
 django.setup()
-from django.contrib.auth import get_user_model
-User = get_user_model()
-if not User.objects.filter(is_superuser=True).exists():
-    User.objects.create_superuser(
-        email='admin@example.com',
-        password='1'
+from django.conf import settings
+from account.models import UserProfile
+
+if not UserProfile.objects.filter(is_superuser=True).exists():
+    UserProfile.objects.create_superuser(
+        email=settings.SUPERUSER_EMAIL,
+        full_name="Admin",
+        password=settings.SUPERUSER_PASSWORD
     )
     print("✅ Суперюзер создан: admin / 1")
 else:

@@ -1,6 +1,8 @@
 services:
   web:
     build: .
+    env_file:
+      - .env
     container_name: web
     command: >
       sh -c "python manage.py migrate --noinput &&
@@ -36,17 +38,6 @@ services:
     networks:
       - webnet
 
-  db:
-    image: postgres:latest
-    container_name: db
-    volumes:
-      - ./sqlite_data:/var/lib/postgresql/data
-    environment:
-      - POSTGRES_DB=jashtar_kyimyly
-      - POSTGRES_USER=youruser
-      - POSTGRES_PASSWORD=yourpassword
-    networks:
-      - webnet
 
 networks:
   webnet:
