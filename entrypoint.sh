@@ -1,6 +1,5 @@
 #!/bin/sh
 
-
 echo "🔄 Применяем миграции..."
 python manage.py makemigrations --noinput
 python manage.py migrate --noinput
@@ -15,8 +14,12 @@ django.setup()
 from django.contrib.auth import get_user_model
 User = get_user_model()
 if not User.objects.filter(is_superuser=True).exists():
-    User.objects.create_superuser('${SUPERUSER_NAME}', '${SUPERUSER_EMAIL}', '${SUPERUSER_PASSWORD}')
-    print("✅ Суперюзер создан.")
+    User.objects.create_superuser(
+        username='admin',
+        email='admin@example.com',
+        password='1'
+    )
+    print("✅ Суперюзер создан: admin / 1")
 else:
     print("⚠️ Суперюзер уже существует.")
 EOF
