@@ -1,3 +1,4 @@
+from . import translation
 from django.contrib import admin
 from .models import (
     Events, EventImage,

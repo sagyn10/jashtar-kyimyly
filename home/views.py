@@ -77,8 +77,8 @@ class HomePageView(APIView):
             "about": AboutMovement.objects.all(),
             "advantages": Advantage.objects.all(),
             "materials": BrandMaterial.objects.all(),
-            "news": News.objects.all().order_by('-date')[:5],      # например, последние 5 новостей
-            "events": Events.objects.all().order_by('-date')[:5],  # последние 5 событий
+            "news": News.objects.all().order_by('-date')[:5],
+            "events": Events.objects.all().order_by('-date')[:5],
         }
 
         serializer = HomePageSerializer(data)
