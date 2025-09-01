@@ -1,21 +1,21 @@
 from modeltranslation.translator import register, TranslationOptions
-from .models import Banner, AboutMovement, Announcement, News, BrandMaterial
+from .models import Banner, AboutMovement, Advantage, BrandMaterial
+
 
 @register(Banner)
 class BannerTranslationOptions(TranslationOptions):
     fields = ('description', 'cta_text')
 
+
 @register(AboutMovement)
 class AboutMovementTranslationOptions(TranslationOptions):
-    fields = ('description', 'advantage')
+    fields = ('description',)
 
-@register(Announcement)
-class AnnouncementTranslationOptions(TranslationOptions):
-    fields = ('title', 'description')
 
-@register(News)
-class NewsTranslationOptions(TranslationOptions):
-    fields = ('title', 'description')
+@register(Advantage)
+class AdvantageTranslationOptions(TranslationOptions):
+    fields = ('text',)
+
 
 @register(BrandMaterial)
 class BrandMaterialTranslationOptions(TranslationOptions):

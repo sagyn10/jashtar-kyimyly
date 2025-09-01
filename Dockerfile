@@ -1,20 +1,23 @@
 FROM python:3.10-slim
 
+# Установка зависимостей
 RUN apt-get update && apt-get install -y \
-    gettext \
+    build-essential \
     libpq-dev \
     curl \
-    fonts-dejavu-core \
+    && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-COPY requirements.txt /jashtar-kyimyly/
+WORKDIR /app
 
-WORKDIR /jashtar-kyimyly
-
+COPY requirements.txt /app/
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY . .
+COPY . /app
+
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
 
 EXPOSE 8000
 
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+ENTRYPOINT ["/entrypoint.sh"]

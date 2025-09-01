@@ -1,20 +1,13 @@
+import os
 from pathlib import Path
 from decouple import config
-from .jazzmin import JAZZMIN_SETTINGS, JAZZMIN_UI_TWEAKS
-
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-SECRET_KEY = config('SECRET_KEY')
+
+SECRET_KEY = config('SECRET_KEY', default='django-insecure-default-key')
 
 DEBUG = True
-ALLOWED_HOSTS = ['0.0.0.0', 'localhost', '127.0.0.1']
-
-JAZZMIN_UI_TWEAKS = JAZZMIN_UI_TWEAKS
-JAZZMIN_SETTINGS = JAZZMIN_SETTINGS
-
-
-FRONTEND_URL = "http://38.180.136.75"
-
+ALLOWED_HOSTS = ['38.180.136.75', 'localhost', '127.0.0.1']
 
 
 CUSTOM_APPS = [
@@ -28,12 +21,12 @@ THIRD_PARTY_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'drf_spectacular',
-    'django_rest_passwordreset'
+    'django_rest_passwordreset',
+    'modeltranslation',
+    "corsheaders",
 ]
 
-
 INSTALLED_APPS = [
-    'modeltranslation',
     'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -41,10 +34,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    "corsheaders",
     *CUSTOM_APPS,
     *THIRD_PARTY_APPS
 ]
+
 
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
@@ -110,63 +103,40 @@ DATABASES = {
     }
 }
 
-
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
+    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'back_static'
-STATICFILES_DIRS = [
-    BASE_DIR / 'static',
-    # BASE_DIR / 'locale_static',
-]
+STATICFILES_DIRS = [BASE_DIR / 'static']
 
-MEDIA_URL = '/back_media/'
+MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'back_media'
-
-
 
 LANGUAGES = (
     ('en', 'English'),
     ('ru', 'Russian'),
-    ('ky', 'Kyrgyzstan')
-
+    ('ky', 'Kyrgyz'),
 )
-
 MODELTRANSLATION_DEFAULT_LANGUAGE = 'ru'
 MODELTRANSLATION_LANGUAGES = ('ru', 'en', 'ky')
 
 TIME_ZONE = 'Asia/Bishkek'
-
 USE_I18N = True
-
+USE_L10N = True
 USE_TZ = True
 
-USE_L10N = True
-
-
-STATIC_URL = 'static/'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = config('EMAIL_HOST', default='smtp.gmail.com')
+EMAIL_PORT = config('EMAIL_PORT', default=587, cast=int)
+EMAIL_USE_TLS = config('EMAIL_USE_TLS', default=True, cast=bool)
+EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'ryskulovaslan96@gmail.com'
-EMAIL_HOST_PASSWORD = 'uovk zbti wbzg xquf'
-
-
-AUTH_USER_MODEL = "account.UserProfile"
+AUTH_USER_MODEL = 'account.UserProfile'
