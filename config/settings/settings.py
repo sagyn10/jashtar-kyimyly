@@ -17,20 +17,23 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
     'rest_framework',
     'rest_framework.authtoken',
     'drf_spectacular',
     'django_rest_passwordreset',
     'modeltranslation',
-
     'content',
     'about_direction',
     'account',
     'home',
+    "corsheaders",
+    *CUSTOM_APPS,
+    *THIRD_PARTY_APPS
 ]
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
+    "django.middleware.common.CommonMiddleware",
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',
@@ -40,6 +43,31 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3002",
+]
+
+
+CORS_ALLOW_HEADERS = [
+    "content-type",
+    "authorization",
+]
+
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Жаштар кыймылы',
+    'DESCRIPTION': 'Описание API',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': True,
+}
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema'
+}
 
 ROOT_URLCONF = 'config.urls'
 
