@@ -65,8 +65,10 @@ from .serializers import (
     AboutMovementSerializer, AdvantageSerializer,
     BrandMaterialSerializer, NewsSerializer, EventsSerializer
 )
+from drf_spectacular.utils import extend_schema
 
 
+@extend_schema(tags=['home'],  description="home")
 class HomePageView(APIView):
     """
     Главная страница: сборка данных из разных моделей
