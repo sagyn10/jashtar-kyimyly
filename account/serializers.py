@@ -1,3 +1,4 @@
+import re
 from django_rest_passwordreset.models import ResetPasswordToken
 from rest_framework import serializers
 from django.contrib.auth.hashers import check_password
@@ -10,9 +11,21 @@ class RegisterSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserProfile
         fields = ['name', 'second_name', 'surname', 'full_name', 'email', 'password', 'password_confirmation']
-        extra_kwargs = {
-            'password': {'write_only': True}
-        }
+        extra_kwargs = {'password': {'write_only': True}}
+
+    def validate_full_name(self, value):
+        if not re.fullmatch(r'[А-Яа-яЁё\s]{3,}', value):
+            raise serializers.ValidationError("ФИО должно быть минимум 3 символа и только кириллица.")
+        return value
+
+    def validate_password(self, value):
+        if len(value) < 8:
+            raise serializers.ValidationError("Пароль должен содержать минимум 8 символов.")
+        if not re.search(r'\d', value):
+            raise serializers.ValidationError("Пароль должен содержать хотя бы одну цифру.")
+        if not re.search(r'[A-ZА-Я]', value):
+            raise serializers.ValidationError("Пароль должен содержать хотя бы одну заглавную букву.")
+        return value
 
     def validate(self, data):
         if data['password'] != data['password_confirmation']:
@@ -50,16 +63,16 @@ class LoginSerializer(serializers.Serializer):
         data['user'] = user
         return data
 
+
 class VerifyResetCodeSerializer(serializers.Serializer):
-    email = serializers.EmailField()  # Email пользователя
-    reset_code = serializers.IntegerField()  # 4-значный код
-    new_password = serializers.CharField(write_only=True)  # Новый пароль
+    email = serializers.EmailField()
+    reset_code = serializers.IntegerField()
+    new_password = serializers.CharField(write_only=True)
 
     def validate(self, data):
         email = data.get('email')
         reset_code = data.get('reset_code')
 
-        # Проверяем, существует ли указанный код для email
         try:
             token = ResetPasswordToken.objects.get(user__email=email, key=reset_code)
         except ResetPasswordToken.DoesNotExist:
@@ -71,7 +84,5 @@ class VerifyResetCodeSerializer(serializers.Serializer):
     def save(self):
         user = self.validated_data['user']
         new_password = self.validated_data['new_password']
-
-        # Устанавливаем новый пароль
         user.set_password(new_password)
         user.save()

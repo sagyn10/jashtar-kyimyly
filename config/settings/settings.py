@@ -55,6 +55,22 @@ CORS_ALLOW_HEADERS = [
     "authorization",
 ]
 
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Жаштар кыймылы',
+    'DESCRIPTION': 'Описание API',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': True,
+}
+
+
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    ],
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+}
+
 ROOT_URLCONF = 'config.urls'
 
 TEMPLATES = [
@@ -116,9 +132,6 @@ EMAIL_USE_TLS = config('EMAIL_USE_TLS', default=True, cast=bool)
 EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='')
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')
 
-REST_FRAMEWORK = {
-    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema'
-}
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 

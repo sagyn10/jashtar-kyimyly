@@ -67,10 +67,10 @@ from .serializers import (
 )
 
 
+
+
+@extend_schema(tags=['home'],  description="home")
 class HomePageView(APIView):
-    """
-    Главная страница: сборка данных из разных моделей
-    """
     def get(self, request):
         data = {
             "banners": Banner.objects.prefetch_related("баннеры").all(),
