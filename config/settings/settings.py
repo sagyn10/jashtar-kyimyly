@@ -1,6 +1,7 @@
 import os
 from pathlib import Path
 from decouple import config
+from .cors import *
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -23,6 +24,7 @@ INSTALLED_APPS = [
     'drf_spectacular',
     'django_rest_passwordreset',
     'modeltranslation',
+    'corsheaders',
 
     'content',
     'about_direction',
@@ -34,11 +36,23 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+]
+
+CORS_ALLOWED_ORIGINS = config(
+    "ALLOWED_ORIGINS",
+    default="http://localhost:3000",
+    cast=lambda v: [i.strip() for i in v.split(",")]
+)
+
+CORS_ALLOW_HEADERS = [
+    "content-type",
+    "authorization",
 ]
 
 ROOT_URLCONF = 'config.urls'
