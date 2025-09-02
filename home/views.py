@@ -55,7 +55,7 @@
 #     serializer_class = BrandMaterialSerializer
 #     lookup_field = 'id'
 #
-
+from drf_spectacular.utils import extend_schema
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .models import Banner, AboutMovement, Advantage, BrandMaterial
