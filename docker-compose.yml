@@ -14,7 +14,7 @@ services:
     expose:
       - "8000"
     environment:
-      - DJANGO_SETTINGS_MODULE=config.settings.settings
+      - DJANGO_SETTINGS_MODULE=config.settings
     networks:
       - webnet
 
@@ -36,8 +36,3 @@ services:
 networks:
   webnet:
     driver: bridge
-
-volumes:
-  static_volume:
-  media_volume:
-  sqlite_data:
