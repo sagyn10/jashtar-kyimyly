@@ -24,7 +24,7 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
     name = models.CharField(max_length=255, verbose_name="Имя", blank=True, null=True)
     second_name = models.CharField(max_length=255, verbose_name="Фамилия", blank=True, null=True)
     surname = models.CharField(max_length=255, verbose_name="Отчество", blank=True, null=True)
-    is_active = models.BooleanField(default=True)
+    is_active = models.BooleanField(default=False)  # ⬅️ теперь новый пользователь неактивен
     is_staff = models.BooleanField(default=False)
     date_joined = models.DateTimeField(null=True, blank=True)
 
@@ -35,3 +35,14 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.email
+
+
+
+class UserCabinet(models.Model):
+    user = models.OneToOneField(UserProfile, on_delete=models.CASCADE, related_name="cabinet")
+    telegram_channel = models.URLField(blank=True, null=True, verbose_name="Ссылка на Telegram-канал")
+    google_form_link = models.URLField(blank=True, null=True, verbose_name="Ссылка на Google Form")
+    education_materials = models.TextField(blank=True, null=True, verbose_name="Обучающие материалы")
+
+    def __str__(self):
+        return f"Кабинет {self.user.email}"

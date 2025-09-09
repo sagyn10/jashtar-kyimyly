@@ -10,6 +10,23 @@ SECRET_KEY = config('SECRET_KEY', default='django-insecure-default-key')
 DEBUG = True
 ALLOWED_HOSTS = ['38.180.136.75', 'localhost', '127.0.0.1']
 
+
+CUSTOM_APPS = [
+    'content',
+    'about_direction',
+    'account',
+    'home',
+]
+
+THIRD_PARTY_APPS = [
+    'rest_framework',
+    'rest_framework.authtoken',
+    'drf_spectacular',
+    'django_rest_passwordreset',
+    'modeltranslation',
+    "corsheaders",
+]
+
 INSTALLED_APPS = [
     'jazzmin',
     'django.contrib.admin',
@@ -32,7 +49,10 @@ INSTALLED_APPS = [
     'home',
 ]
 
+
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
+    "django.middleware.common.CommonMiddleware",
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',
@@ -49,6 +69,11 @@ CORS_ALLOWED_ORIGINS = config(
     default="http://localhost:3000",
     cast=lambda v: [i.strip() for i in v.split(",")]
 )
+
+# CORS_ALLOWED_ORIGINS = [
+#     "http://localhost:3002",
+# ]
+
 
 CORS_ALLOW_HEADERS = [
     "content-type",
