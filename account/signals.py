@@ -2,6 +2,9 @@ import random
 from django.core.mail import send_mail
 from django.dispatch import receiver
 from django_rest_passwordreset.signals import reset_password_token_created
+from django.db.models.signals import post_save
+
+from .models import UserProfile, UserCabinet
 
 
 @receiver(reset_password_token_created)
@@ -24,3 +27,10 @@ def password_reset_token_created(sender, instance, reset_password_token, *args, 
         recipient_list=[reset_password_token.user.email],
         fail_silently=False,
     )
+
+
+@receiver(post_save, sender=UserProfile)
+def create_user_cabinet(sender, instance, created, **kwargs):
+    """Автоматически создаём личный кабинет для каждого нового пользователя"""
+    if created:
+        UserCabinet.objects.create(user=instance)

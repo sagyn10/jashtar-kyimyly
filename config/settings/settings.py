@@ -35,19 +35,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
-    'rest_framework',
-    'rest_framework.authtoken',
-    'drf_spectacular',
-    'django_rest_passwordreset',
-    'modeltranslation',
-    'corsheaders',
-
-    'content',
-    'about_direction',
-    'account',
-    'home',
-]
+] + THIRD_PARTY_APPS + CUSTOM_APPS
 
 
 MIDDLEWARE = [
@@ -56,8 +44,6 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
-    'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -70,24 +56,24 @@ CORS_ALLOWED_ORIGINS = config(
     cast=lambda v: [i.strip() for i in v.split(",")]
 )
 
-# CORS_ALLOWED_ORIGINS = [
-#     "http://localhost:3002",
-# ]
-
-
 CORS_ALLOW_HEADERS = [
     "content-type",
     "authorization",
 ]
-
 
 SPECTACULAR_SETTINGS = {
     'TITLE': 'Жаштар кыймылы',
     'DESCRIPTION': 'Описание API',
     'VERSION': '1.0.0',
     'SERVE_INCLUDE_SCHEMA': True,
-}
 
+"SECURITY": [{"BearerAuth": []}],
+"COMPONENTS": {
+    "securitySchemes": {
+        "BearerAuth": {"type": "http", "scheme": "bearer", "bearerFormat": "JWT"}
+    }
+}
+}
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
@@ -156,7 +142,6 @@ EMAIL_PORT = config('EMAIL_PORT', default=587, cast=int)
 EMAIL_USE_TLS = config('EMAIL_USE_TLS', default=True, cast=bool)
 EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='')
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')
-
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 

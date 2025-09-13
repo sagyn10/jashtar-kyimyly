@@ -1,7 +1,7 @@
-import re
 from django_rest_passwordreset.models import ResetPasswordToken
 from django.contrib.auth.hashers import check_password
 from rest_framework import serializers
+from django.conf import settings  # 👈 добавил для проверки DEBUG
 from .models import UserProfile, UserCabinet
 
 
@@ -13,21 +13,6 @@ class RegisterSerializer(serializers.ModelSerializer):
         fields = ['name', 'second_name', 'surname', 'full_name', 'email', 'password', 'password_confirmation']
         extra_kwargs = {'password': {'write_only': True}}
 
-    def validate_full_name(self, value):
-        if not re.fullmatch(r'[А-Яа-яЁё\s]{3,}', value):
-            raise serializers.ValidationError("ФИО должно быть минимум 3 символа и только кириллица.")
-        return value
-
-    def validate_password(self, value):
-        if len(value) < 8:
-            raise serializers.ValidationError("Пароль должен содержать минимум 8 символов.")
-        if not re.search(r'\d', value):
-            raise serializers.ValidationError("Пароль должен содержать хотя бы одну цифру.")
-        if not re.search(r'[A-ZА-Я]', value):
-            raise serializers.ValidationError("Пароль должен содержать хотя бы одну заглавную букву.")
-        return value
-
-
     def validate(self, data):
         if data['password'] != data['password_confirmation']:
             raise serializers.ValidationError({'password_confirmation': 'Пароли не совпадают.'})
@@ -38,7 +23,14 @@ class RegisterSerializer(serializers.ModelSerializer):
         password = validated_data.pop('password')
         user = UserProfile(**validated_data)
         user.set_password(password)
-        user.is_active = False
+
+        # ✅ если DEBUG=True → активируем сразу (для тестов/Swagger)
+        # иначе оставляем is_active=False (реальное подтверждение почты)
+        if settings.DEBUG:
+            user.is_active = True
+        else:
+            user.is_active = False
+
         user.save()
         return user
 
@@ -59,14 +51,13 @@ class LoginSerializer(serializers.Serializer):
         if not check_password(password, user.password):
             raise serializers.ValidationError("Неверный логин или пароль.")
 
-        if not user.is_active:
+        # ✅ проверка email подтверждения только в боевом режиме
+        if not settings.DEBUG and not user.is_active:
             raise serializers.ValidationError("Подтвердите email для входа.")
 
         data['user'] = user
         return data
 
-
-# class VerifyResetCodeSerializer(serializers.Serializer):
 
 class PasswordResetConfirmSerializer(serializers.Serializer):
     email = serializers.EmailField()
