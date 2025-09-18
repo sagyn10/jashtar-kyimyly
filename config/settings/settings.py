@@ -8,7 +8,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config('SECRET_KEY', default='django-insecure-default-key')
 
 DEBUG = True
-ALLOWED_HOSTS = ['38.180.136.75', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = config('ALLOWED_HOSTS')
 
 
 CUSTOM_APPS = [
@@ -146,3 +146,15 @@ EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'account.UserProfile'
+
+CSRF_TRUSTED_ORIGINS = config("CSRF_TRUSTED_ORIGINS")
+
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+
+
+SECURE_CONTENT_TYPE_NOSNIFF = True
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True
+SECURE_HSTS_SECONDS = 3600
