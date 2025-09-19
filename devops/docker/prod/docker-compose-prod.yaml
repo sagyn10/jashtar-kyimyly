@@ -10,7 +10,7 @@ services:
       volumes:
         - ../nginx/conf.prod:/etc/nginx/conf.d
         - ../../config/back_static:/opt/services/jashtar-kyimyly-backend/back_static
-        - ../../config/back_me/dia:/opt/services/jashtar-kyimyly-backend/back_media
+        - ../../config/back_media:/opt/services/jashtar-kyimyly-backend/back_media
         - /etc/letsencrypt:/etc/letsencrypt
       networks:
         - nginx_network
