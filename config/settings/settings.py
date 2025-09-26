@@ -2,12 +2,13 @@ import os
 from pathlib import Path
 from decouple import config
 from .cors import *
+from corsheaders.defaults import default_headers
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = config('SECRET_KEY', default='django-insecure-default-key')
 
-DEBUG = True
+DEBUG = config('DEBUG', default=False, cast=bool)
 ALLOWED_HOSTS = ['38.180.136.75', 'localhost', '127.0.0.1']
 
 
@@ -39,10 +40,12 @@ INSTALLED_APPS = [
 
 
 MIDDLEWARE = [
-    "corsheaders.middleware.CorsMiddleware",
-    "django.middleware.common.CommonMiddleware",
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+
+    "corsheaders.middleware.CorsMiddleware",
+
+    "django.middleware.common.CommonMiddleware",
     'django.middleware.locale.LocaleMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -50,16 +53,29 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-CORS_ALLOWED_ORIGINS = config(
-    "ALLOWED_ORIGINS",
-    default="http://localhost:3000",
-    cast=lambda v: [i.strip() for i in v.split(",")]
-)
+if not CORS_ALLOW_ALL_ORIGINS:
+    CORS_ALLOWED_ORIGINS = config(
+        "CORS_ALLOWED_ORIGINS",
+        default="http://localhost:3000",
+        cast=lambda v: [i.strip() for i in v.split(",")]
+    )
 
-CORS_ALLOW_HEADERS = [
-    "content-type",
-    "authorization",
-]
+    CSRF_TRUSTED_ORIGINS = CORS_ALLOWED_ORIGINS
+else:
+    CSRF_TRUSTED_ORIGINS = [
+        'http://localhost',
+        'https://localhost',
+    ]
+
+CORS_ALLOW_HEADERS = list(default_headers) + ['authorization']
+
+CORS_ALLOW_CREDENTIALS = True
+
+USE_X_FORWARDED_HOST = True
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+SECURE_SSL_REDIRECT = not DEBUG
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
 
 SPECTACULAR_SETTINGS = {
     'TITLE': 'Жаштар кыймылы',
@@ -158,3 +174,7 @@ EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'account.UserProfile'
+
+SUPERUSER_NAME = config('SUPERUSER_NAME', default='admin')
+SUPERUSER_EMAIL = config('SUPERUSER_EMAIL', default='admin@admin.com')
+SUPERUSER_PASSWORD = config('SUPERUSER_PASSWORD', default='ADm1n_333')
