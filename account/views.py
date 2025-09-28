@@ -16,7 +16,7 @@ class RegisterView(generics.CreateAPIView):
     def perform_create(self, serializer):
         user = serializer.save()
         token = default_token_generator.make_token(user)
-        confirm_link = f"http://frontend-site.com/verify-email?uid={user.pk}&token={token}"
+        confirm_link = f"https://jashtarkyimyly.kg/verify-email?uid={user.pk}&token={token}"
 
         send_mail(
             "Подтверждение email",
