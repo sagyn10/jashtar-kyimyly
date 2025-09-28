@@ -19,7 +19,8 @@ if not UserProfile.objects.filter(is_superuser=True).exists():
     UserProfile.objects.create_superuser(
         email=settings.SUPERUSER_EMAIL,
         full_name=settings.SUPERUSER_NAME,
-        password=settings.SUPERUSER_PASSWORD
+        password=settings.SUPERUSER_PASSWORD,
+        is_active=True
     )
     print("✅ Суперюзер создан: admin / 1")
 else:
