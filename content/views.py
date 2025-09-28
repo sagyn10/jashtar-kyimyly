@@ -21,7 +21,6 @@ class EventList(generics.ListAPIView):
 class EventsDetail(generics.RetrieveAPIView):
     queryset = Events.objects.all()
     serializer_class = EventSerializer
-    lookup_field = 'slug'
 
 
 @extend_schema(tags=['content'], description="Получение списка проектов")
@@ -34,7 +33,6 @@ class ProjectList(generics.ListAPIView):
 class ProjectsDetail(generics.RetrieveAPIView):
     queryset = Projects.objects.all()
     serializer_class = ProjectSerializer
-    lookup_field = 'slug'
 
 
 @extend_schema(tags=['content'], description="Получение списка галерей")
@@ -47,7 +45,6 @@ class GalleryList(generics.ListAPIView):
 class GalleryDetail(generics.RetrieveAPIView):
     queryset = Gallery.objects.all()
     serializer_class = GallerySerializer
-    lookup_field = 'id'
 
 
 @extend_schema(tags=['content'], description="Получение списка видеоархивов")
@@ -96,7 +93,6 @@ class ResultsListAPIView(generics.ListAPIView):
 class ResultsDetailAPIView(generics.RetrieveAPIView):
     queryset = Results.objects.all()
     serializer_class = ResultsSerializer
-    lookup_field = 'id'
 
 
 @extend_schema(tags=['content'], description="Получение списка новостей")

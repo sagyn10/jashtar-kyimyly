@@ -24,7 +24,7 @@ urlpatterns = [
     path('images/<int:pk>/', GalleryDetail.as_view(), name='images'),
 
     path('video-archives/', VideoArchiveList.as_view(), name='video-archive-list'),
-    path('video-archives/<int:id>/', VideoArchiveDetail.as_view(), name='video-archive-detail'),
+    path('video-archives/<int:pk>/', VideoArchiveDetail.as_view(), name='video-archive-detail'),
 
     path('activity_direction/', ActivityDirectionList.as_view(), name='activity-direction'),
 
