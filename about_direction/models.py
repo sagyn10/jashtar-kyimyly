@@ -71,7 +71,7 @@ class Management(models.Model):
     position = models.CharField(max_length=155, verbose_name='Должность')
 
     def __str__(self):
-        return f'{self.first_name}, {self.last_name}'
+        return f'{self.full_name}'
 
     class Meta:
         verbose_name = 'Руководство'
