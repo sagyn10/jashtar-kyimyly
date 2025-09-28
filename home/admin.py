@@ -2,7 +2,7 @@ from . import translation
 from django.contrib import admin
 from modeltranslation.admin import TranslationAdmin, TranslationTabularInline
 from _common.mixins import TranslatorMediaMixin
-from .models import Banner, AboutMovement, BrandMaterial
+from .models import Banner, AboutMovement, BrandMaterial, Advantage
 
 @admin.register(Banner)
 class BannerAdmin(TranslatorMediaMixin, TranslationAdmin):
@@ -19,3 +19,7 @@ class AboutMovementAdmin(TranslatorMediaMixin, TranslationAdmin):
 @admin.register(BrandMaterial)
 class BrandMaterialAdmin(TranslatorMediaMixin, TranslationAdmin):
     list_display = ('title', 'file')
+
+@admin.register(Advantage)
+class AdvantageAdmin(TranslatorMediaMixin, TranslationAdmin):
+    list_display = ('pk',)

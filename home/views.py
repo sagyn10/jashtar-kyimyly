@@ -73,7 +73,7 @@ from drf_spectacular.utils import extend_schema
 class HomePageView(APIView):
     def get(self, request):
         data = {
-            "banners": Banner.objects.prefetch_related("баннеры").all(),
+            "banners": Banner.objects.prefetch_related('image').all(),
             "about": AboutMovement.objects.all(),
             "advantages": Advantage.objects.all(),
             "materials": BrandMaterial.objects.all(),

@@ -8,14 +8,16 @@ class Banner(models.Model):
     cta_text = models.CharField(max_length=255, verbose_name='Текст кнопки (СТА)', default='Вступить в движение')
     cta_link = models.URLField(verbose_name='Ссылка на Google Forms')
 
-
     class Meta:
         verbose_name = 'Баннер'
         verbose_name_plural = 'Баннеры'
+    
+    def __str__(self):
+        return self.description
 
 
 class BannerImage(models.Model):
-    banner = models.ForeignKey(Banner, on_delete=models.CASCADE, related_name='Баннеры')
+    banner = models.ForeignKey(Banner, on_delete=models.CASCADE, related_name='image')
     image = models.FileField(
         upload_to='banners/',
         verbose_name="Изображение (SVG)",
@@ -26,6 +28,9 @@ class BannerImage(models.Model):
     class Meta:
         verbose_name = "Изображение баннера"
         verbose_name_plural = "Изображения баннеров"
+
+    def __str__(self):
+        return f"{self.banner.description} - изображение"
 
 
 class AboutMovement(models.Model):

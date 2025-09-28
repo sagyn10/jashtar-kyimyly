@@ -80,7 +80,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('image', models.FileField(help_text='Загружайте только изображения в формате .svg', upload_to='banners/', validators=[django.core.validators.FileExtensionValidator(allowed_extensions=['svg'])], verbose_name='Изображение (SVG)')),
-                ('banner', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='Баннеры', to='home.banner')),
+                ('banner', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='image', to='home.banner')),
             ],
             options={
                 'verbose_name': 'Изображение баннера',

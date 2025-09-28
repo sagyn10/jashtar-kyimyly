@@ -40,7 +40,7 @@ class NewsSerializer(serializers.ModelSerializer):
 class EventsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Events
-        fields = ['id', 'title', 'description', 'date', 'location']
+        fields = ['id', 'title', 'description', 'date']
 
 
 class HomePageSerializer(serializers.Serializer):
