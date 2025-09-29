@@ -8,8 +8,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = config('SECRET_KEY', default='django-insecure-default-key')
 
+
 DEBUG = config('DEBUG', default=False, cast=bool)
 ALLOWED_HOSTS = ['38.180.136.75', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = config('ALLOWED_HOSTS').split(',')
+
 
 
 CUSTOM_APPS = [
@@ -120,8 +123,12 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': config('POSTGRES_DB'),
+        'USER': config('POSTGRES_USER'),
+        'PASSWORD': config('POSTGRES_PASSWORD'),
+        'HOST': config('POSTGRES_HOST', 'localhost'),
+        'PORT': config('POSTGRES_PORT', '5432'),
     }
 }
 
@@ -176,6 +183,19 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'account.UserProfile'
 
+
 SUPERUSER_NAME = config('SUPERUSER_NAME', default='admin')
 SUPERUSER_EMAIL = config('SUPERUSER_EMAIL', default='admin@admin.com')
 SUPERUSER_PASSWORD = config('SUPERUSER_PASSWORD', default='ADm1n_333')
+
+CSRF_TRUSTED_ORIGINS = config("CSRF_TRUSTED_ORIGINS").split(',')
+
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+
+
+SECURE_CONTENT_TYPE_NOSNIFF = True
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True
+SECURE_HSTS_SECONDS = 3600

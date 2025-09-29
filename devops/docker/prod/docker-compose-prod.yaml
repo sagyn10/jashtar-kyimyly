@@ -1,0 +1,16 @@
+version: '3.3'
+
+services:
+  nginx:
+      image: nginx:1.13-alpine
+      container_name: jashtar_nginx
+      restart: unless-stopped
+      ports:
+        - "443:443"
+      volumes:
+        - ../nginx/conf.prod:/etc/nginx/conf.d
+        - ../../config/back_static:/opt/services/jashtar-kyimyly-backend/back_static
+        - ../../config/back_media:/opt/services/jashtar-kyimyly-backend/back_media
+        - /etc/letsencrypt:/etc/letsencrypt
+      networks:
+        - nginx_network
