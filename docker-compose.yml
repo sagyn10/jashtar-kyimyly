@@ -8,7 +8,7 @@ services:
     container_name: web
     volumes:
       - .:/app
-      - ./back_static:/app/back_static
+      - ./back_static:/app/config/back_static
       - ./back_media:/app/back_media
       - ./sqlite_data:/app/sqlite_data   # папка для хранения sqlite базы
     expose:
