@@ -1,0 +1,14 @@
+version: '3.9'
+
+services:
+  nginx:
+    container_name: jashtar_nginx
+    image: nginx:1.25.2-alpine
+    ports:
+      - "80:80"
+    volumes:
+      - ../nginx/conf.dev:/etc/nginx/conf.d
+      - ../../back_static:/opt/services/jashtar-kyimyly-backend/back_static
+      - ../../back_media:/opt/services/jashtar-kyimyly-backend/back_media
+    networks:
+      - nginx_network
