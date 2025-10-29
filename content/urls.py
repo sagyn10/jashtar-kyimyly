@@ -1,11 +1,11 @@
 from django.urls import path
 from .models import Gallery
-from .views import ProjectList, EventList, EventsDetail, ProjectsDetail, GalleryList, GalleryDetail, VideoArchiveList, VideoArchiveDetail
+from .views import ProjectList, EventList, EventsDetail, ProjectsDetail, GalleryList, GalleryImageList, GalleryDetail, VideoArchiveList, VideoArchiveDetail
 from django.urls import path, include
 from rest_framework import routers
 from .views import (ProjectList, EventList, EventsDetail, ProjectsDetail, ActivityDirectionList,
                     DepartmentsListAPIView,DepartmentsDetailAPIView,
-                    ResultsListAPIView, ResultsDetailAPIView, NewsDetailAPIView, NewsListAPIView)
+                    ResultsListAPIView, ResultsDetailAPIView, NewsDetailAPIView, NewsListAPIView, CourseListAPIView)
 
 router =routers.DefaultRouter()
 
@@ -14,14 +14,17 @@ router =routers.DefaultRouter()
 urlpatterns = [
     path('', include(router.urls)),
 
+    path('courses/', CourseListAPIView.as_view(), name='courses-list'),
+
     path('events/', EventList.as_view(), name='events-list'),
     path('events/<int:pk>/', EventsDetail.as_view(), name='events-detail'),
 
     path('projects/', ProjectList.as_view(), name='project-list'),
     path('projects/<int:pk>/', ProjectsDetail.as_view(), name='projects-detail'),
 
-    path('images/', GalleryList.as_view(), name='images'),
-    path('images/<int:pk>/', GalleryDetail.as_view(), name='images'),
+    path('images/', GalleryImageList.as_view(), name='images'),
+    path('albums/', GalleryList.as_view(), name='albums'),
+    path('albums/<int:pk>/', GalleryDetail.as_view(), name='albums'),
 
     path('video-archives/', VideoArchiveList.as_view(), name='video-archive-list'),
     path('video-archives/<int:pk>/', VideoArchiveDetail.as_view(), name='video-archive-detail'),

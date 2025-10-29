@@ -6,8 +6,8 @@ from .models import (
     Gallery, GalleryImage,
     VideoArchive,
     ActivityDirection,
-    Departments, DepartmentImage,
-    Results, News
+    Departments,
+    Results, News, Employee, EducationMaterial, Course
 )
 from modeltranslation.admin import TranslationAdmin, TranslationTabularInline
 from _common.mixins import TranslatorMediaMixin
@@ -24,16 +24,11 @@ class ProjectImageInline(admin.TabularInline):
     max_num = 5
 
 
-class GalleryImageInline(admin.TabularInline):
-    model = GalleryImage
-    extra = 0
-    max_num = 15
+# class DepartmentImageInline(admin.TabularInline):
+#     model = DepartmentImage
+#     extra = 0
+#     max_num = 5
 
-
-class DepartmentImageInline(admin.TabularInline):
-    model = DepartmentImage
-    extra = 0
-    max_num = 5
 
 
 @admin.register(Events)
@@ -52,11 +47,14 @@ class ProjectsAdmin(TranslatorMediaMixin, TranslationAdmin):
     exclude = ('slug',)
     search_fields = ('title',)
 
+@admin.register(GalleryImage)
+class GalleryImagesAdmin(TranslatorMediaMixin, TranslationAdmin):
+    list_display = ('title', 'date', 'image')
+    list_display_links = ('title', 'date')
 
 @admin.register(Gallery)
 class GalleryAdmin(TranslatorMediaMixin, TranslationAdmin):
     list_display = ('title', 'date')
-    inlines = [GalleryImageInline]
     exclude = ('slug',)
     search_fields = ('title',)
     list_filter = ('date',)
@@ -64,7 +62,7 @@ class GalleryAdmin(TranslatorMediaMixin, TranslationAdmin):
 
 @admin.register(VideoArchive)
 class VideoArchiveAdmin(TranslatorMediaMixin, TranslationAdmin):
-    list_display = ('title', 'video_url')
+    list_display = ('title', 'video_url') 
     search_fields = ('title',)
 
 
@@ -77,8 +75,14 @@ class ActivityDirectionAdmin(TranslatorMediaMixin, TranslationAdmin):
 @admin.register(Departments)
 class DepartmentsAdmin(TranslatorMediaMixin, TranslationAdmin):
     list_display = ('title', 'address')
-    inlines = [DepartmentImageInline]
+    # inlines = [DepartmentImageInline]
     search_fields = ('title', 'address')
+
+
+@admin.register(Employee)
+class EmployeeAdmin(TranslatorMediaMixin, TranslationAdmin):
+    list_display = ('name', 'position')
+    search_fields = ('name', 'position')
 
 
 @admin.register(Results)
@@ -91,3 +95,15 @@ class ResultsAdmin(TranslatorMediaMixin, TranslationAdmin):
 class NewsAdmin(TranslatorMediaMixin, TranslationAdmin):
     list_display = ('title',)
     search_fields = ('title',)
+
+
+@admin.register(EducationMaterial)
+class EducationMaterialAdmin(TranslatorMediaMixin, TranslationAdmin):
+    list_display = ('title', 'attachment_type', 'attachment', 'link')
+    search_fields = ('title', 'attachment_type')
+
+
+@admin.register(Course)
+class CourseAdmin(TranslatorMediaMixin, TranslationAdmin):
+    list_display = ('title', 'description', 'link')
+    search_fields = ('title', 'description')

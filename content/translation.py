@@ -1,5 +1,5 @@
 from modeltranslation.translator import register, TranslationOptions
-from .models import Events, Projects, ActivityDirection, Departments, Results, News, Gallery, VideoArchive
+from .models import Events, Employee, Projects, ActivityDirection, Departments, Results, News, Gallery, GalleryImage, VideoArchive, EducationMaterial, Course
 
 
 @register(Events)
@@ -9,7 +9,7 @@ class EventsTranslationOptions(TranslationOptions):
 
 @register(Projects)
 class ProjectsTranslationOptions(TranslationOptions):
-    fields = ('title', 'description')
+    fields = ('title', 'description', 'goals', 'tasks')
 
 
 @register(Gallery)
@@ -22,7 +22,7 @@ class VideoArchiveTranslationOptions(TranslationOptions):
 
 @register(ActivityDirection)
 class ActivityDirectionTranslationOptions(TranslationOptions):
-    fields = ('title', 'description')
+    fields = ('title', 'short_description', 'description')
 
 
 @register(Departments)
@@ -37,4 +37,21 @@ class ResultsTranslationOptions(TranslationOptions):
 
 @register(News)
 class NewsTranslationOptions(TranslationOptions):
+    fields = ('title', 'description')
+
+
+@register(Employee)
+class EmployeeTranslationOptions(TranslationOptions):
+    fields = ('name', 'position')
+
+@register(GalleryImage)
+class GalleryImageTranslationOptions(TranslationOptions):
+    fields = ('title',)
+
+@register(EducationMaterial)
+class EducationMaterialTranslationOptions(TranslationOptions):
+    fields = ('title',)
+
+@register(Course)
+class CourseTranslationOptions(TranslationOptions):
     fields = ('title', 'description')

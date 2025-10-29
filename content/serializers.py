@@ -1,5 +1,10 @@
 from rest_framework import serializers
-from .models import Events, EventImage, Projects, ProjectsImage, Gallery, GalleryImage, VideoArchive, ActivityDirection, Departments, DepartmentImage, Results, News
+
+from .models import (
+    Events, EventImage, Projects,
+    ProjectsImage, Gallery, GalleryImage,
+    VideoArchive, ActivityDirection, Departments, 
+    Results, News, Employee, EducationMaterial, Course)
 
 class EventImageSerializer(serializers.ModelSerializer):
     class Meta:
@@ -10,23 +15,28 @@ class EventSerializer(serializers.ModelSerializer):
     images = EventImageSerializer(many=True, read_only=True)
     class Meta:
         model = Events
-        fields = ['id', 'title', 'description', 'slug', 'date', 'event_status', 'images']
+        fields = ['id', 'title', 'description', 'date', 'event_status', 'images', 'time', 'place']
 
 class ProjectsImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProjectsImage
         fields = ['id', 'project', 'image']
 
-class ProjectSerializer(serializers.ModelSerializer):
+class ProjectListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Projects
+        fields = ['id', 'title', 'description', 'image']
+
+class ProjectDetailSerializer(serializers.ModelSerializer):
     images = ProjectsImageSerializer(many=True, read_only=True)
     class Meta:
         model = Projects
-        fields = ['id', 'title', 'description', 'slug', 'images']
+        fields = ['id', 'title', 'description', 'image', 'goals', 'tasks', 'images']
 
 class GalleryImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = GalleryImage
-        fields = ['id', 'gallery', 'image']
+        fields = ['id', 'gallery', 'image', 'title', 'date']
 
 class GallerySerializer(serializers.ModelSerializer):
     images = GalleryImageSerializer(many=True, read_only=True)
@@ -42,18 +52,18 @@ class VideoArchiveSerializer(serializers.ModelSerializer):
 class ActivityDirectionSerializer(serializers.ModelSerializer):
     class Meta:
         model = ActivityDirection
-        fields = ['id', 'title', 'description']
+        fields = ['id', 'title', 'short_description', 'telegram_link', 'instagram_link', 'description', 'image']
 
-class DepartmentImageSerializer(serializers.ModelSerializer):
+class EmployeeSerializer(serializers.ModelSerializer):
     class Meta:
-        model = DepartmentImage
-        fields = ['id', 'department', 'image']
+        model = Employee
+        fields = ['id', 'name', 'position', 'image']
 
 class DepartmentSerializer(serializers.ModelSerializer):
-    images = DepartmentImageSerializer(many=True, read_only=True)
+    employees = EmployeeSerializer(many=True, read_only=True)
     class Meta:
         model = Departments
-        fields = ['id', 'title', 'description', 'address', 'image', 'images']
+        fields = ['id', 'title', 'description', 'address', 'employees']
 
 class ResultsSerializer(serializers.ModelSerializer):
     class Meta:
@@ -63,4 +73,15 @@ class ResultsSerializer(serializers.ModelSerializer):
 class NewsSerializer(serializers.ModelSerializer):
     class Meta:
         model = News
-        fields = ['id', 'title', 'description', 'date', 'image', 'slug']
+        fields = ['id', 'title', 'description', 'date', 'image']
+
+class EducationMaterialSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = EducationMaterial
+        fields = ['id', 'title', 'attachment_type', 'attachment', 'link']
+
+
+class CourseSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Course
+        fields = ['id', 'title', 'description', 'image', 'link']
