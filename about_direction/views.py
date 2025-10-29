@@ -6,22 +6,22 @@ from drf_spectacular.utils import extend_schema
 
 @extend_schema(tags=['about_direction'])
 class HistoryListAPIView(generics.ListAPIView, ):
-    queryset = History.objects.all()
+    queryset = History.objects.prefetch_related('images').all()
     serializer_class = HistorySerializers
 
 @extend_schema(tags=['about_direction'])
 class HistoryDetailAPIView(generics.RetrieveAPIView):
-    queryset = History.objects.all()
+    queryset = History.objects.prefetch_related('images').all()
     serializer_class = HistorySerializers
 
 @extend_schema(tags=['about_direction'])
 class GoalsListAPIView(generics.ListAPIView):
-    queryset = Goals.objects.all()
+    queryset = Goals.objects.prefetch_related('images').all()
     serializer_class = GoalsListSerializers
 
 @extend_schema(tags=['about_direction'])
 class GoalsDetailAPIView(generics.RetrieveAPIView):
-    queryset = Goals.objects.all()
+    queryset = Goals.objects.prefetch_related('images').all()
     serializer_class = GoalsListSerializers
 
 @extend_schema(tags=['about_direction'])

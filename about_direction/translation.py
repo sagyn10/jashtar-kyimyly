@@ -11,7 +11,7 @@ class GoalsTranslationOptions(TranslationOptions):
 
 @register(Legislative)
 class LegislativeTranslationOptions(TranslationOptions):
-    fields = ('law',)
+    fields = ('law', 'description')
 
 @register(Management)
 class ManagementTranslationOptions(TranslationOptions):

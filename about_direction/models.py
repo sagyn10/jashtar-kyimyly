@@ -1,3 +1,5 @@
+import datetime
+
 from django.db import models
 from django.core.validators import FileExtensionValidator
 
@@ -18,6 +20,23 @@ class History(models.Model):
         verbose_name_plural = 'История создания'
 
 
+class HistoryImage(models.Model):
+    history = models.ForeignKey(
+        History,
+        related_name='images',
+        on_delete=models.CASCADE,
+    )
+    image = models.ImageField(
+        upload_to='experts/',
+        validators=[FileExtensionValidator(allowed_extensions=['jpg', 'png'])],
+        verbose_name="Фотография"
+    )
+
+    class Meta:
+        verbose_name = 'Фотография истории создания'
+        verbose_name_plural = 'Фотографии истории создания'
+
+
 class Goals(models.Model):
     title = models.CharField(max_length=155, verbose_name='Заголовок')
     description = models.TextField(verbose_name='Описание')
@@ -35,8 +54,27 @@ class Goals(models.Model):
         verbose_name_plural = 'Цели и миссия'
 
 
+class GoalImage(models.Model):
+    goal = models.ForeignKey(
+        Goals,
+        related_name='images',
+        on_delete=models.CASCADE,
+        verbose_name="Цель"
+    )
+    image = models.ImageField(
+        upload_to='experts/',
+        validators=[FileExtensionValidator(allowed_extensions=['jpg', 'png'])],
+        verbose_name="Фотография"
+    )
+
+    class Meta:
+        verbose_name = 'Фотография цели'
+        verbose_name_plural = 'Фотографии цели'
+
+
 class Legislative(models.Model):
     law = models.CharField(max_length=155, verbose_name='Название закона')
+    description = models.CharField(max_length=155, verbose_name='Описание закона', default='')
     file = models.FileField(
         upload_to='research/',
         blank=True,
@@ -45,13 +83,8 @@ class Legislative(models.Model):
         validators=[FileExtensionValidator(allowed_extensions=['pdf', 'word', 'excel'])],
         help_text="Загружайте файлы только в формате .pdf, .word, или .excel"
     )
-    image = models.ImageField(
-        upload_to='experts/',
-        verbose_name="Изображение",
-        validators=[FileExtensionValidator(allowed_extensions=['png', 'jpg'])],
-        help_text="Загружайте только изображения в формате .png или .jpg"
-    )
-
+    date = models.DateField(verbose_name="Дата", default=datetime.date.today)
+    
     def __str__(self):
         return f'{self.law}'
 
