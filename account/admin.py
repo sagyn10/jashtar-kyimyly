@@ -1,8 +1,9 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django_rest_passwordreset.models import ResetPasswordToken
-from .models import UserProfile
+from .models import UserProfile, UserCabinet
 
+from content.models import Projects, EducationMaterial
 
 # Убираем модель ResetPasswordToken из админки, она не нужна
 try:
@@ -41,3 +42,18 @@ class UserProfileAdmin(UserAdmin):
 # Чтобы в админке писалось красиво (в models.py у UserProfile)
 UserProfile._meta.verbose_name = "Пользователь"
 UserProfile._meta.verbose_name_plural = "Пользователи"
+
+
+@admin.register(UserCabinet)
+class UserCabinetAdmin(admin.ModelAdmin):
+    list_display = ("user", "telegram_channel", "google_form_link")
+    search_fields = ("user__email", "user__full_name")
+    filter_horizontal = ("projects", "education_materials")
+    list_select_related = ("user",)
+
+    fieldsets = (
+        ("Пользователь", {"fields": ("user",)}),
+        ("Проекты", {"fields": ("projects",)}),
+        ("Материалы", {"fields": ("education_materials",)}),
+        ("Ссылки", {"fields": ("telegram_channel", "google_form_link")}),
+    )

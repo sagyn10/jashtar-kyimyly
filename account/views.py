@@ -3,11 +3,13 @@ from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.decorators import api_view
 from drf_spectacular.utils import extend_schema
+from django.db.models import Prefetch
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import send_mail
 
+from content.models import Projects, EducationMaterial
 from .serializers import RegisterSerializer, LoginSerializer, PasswordResetConfirmSerializer, UserCabinetSerializer
-from .models import UserProfile
+from .models import UserProfile, UserCabinet
 
 
 class RegisterView(generics.CreateAPIView):
@@ -16,7 +18,7 @@ class RegisterView(generics.CreateAPIView):
     def perform_create(self, serializer):
         user = serializer.save()
         token = default_token_generator.make_token(user)
-        confirm_link = f"https://jashtarkyimyly.kg/verify-email?uid={user.pk}&token={token}"
+        confirm_link = f"https://grubworm-calm-vaguely.ngrok-free.app/api/account/verify-email?uid={user.pk}&token={token}"
 
         send_mail(
             "Подтверждение email",
@@ -79,5 +81,12 @@ class UserCabinetView(generics.RetrieveUpdateAPIView):
     serializer_class = UserCabinetSerializer
     permission_classes = [permissions.IsAuthenticated]
 
-    def get_object(self):
-        return self.request.user.cabinet
+    def get_object(self): # type: ignore
+        return (
+            UserCabinet.objects.select_related(
+                "user"
+            ).prefetch_related(
+                Prefetch("projects", queryset=Projects.objects.prefetch_related('images')),
+                "education_materials"
+            ).get(user=self.request.user)
+        )

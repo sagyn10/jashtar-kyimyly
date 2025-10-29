@@ -3,6 +3,7 @@ from django.contrib.auth.hashers import check_password
 from rest_framework import serializers
 from django.conf import settings  # 👈 добавил для проверки DEBUG
 from .models import UserProfile, UserCabinet
+from content.serializers import ProjectListSerializer, EducationMaterialSerializer
 
 
 class RegisterSerializer(serializers.ModelSerializer):
@@ -84,6 +85,9 @@ class PasswordResetConfirmSerializer(serializers.Serializer):
 
 
 class UserCabinetSerializer(serializers.ModelSerializer):
+    projects = ProjectListSerializer(many=True, read_only=True)
+    education_materials = EducationMaterialSerializer(many=True, read_only=True)
+    
     class Meta:
         model = UserCabinet
-        fields = ['telegram_channel', 'google_form_link', 'education_materials']
+        fields = ['telegram_channel', 'google_form_link', 'projects', 'education_materials']

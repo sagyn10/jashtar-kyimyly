@@ -40,9 +40,16 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
 
 class UserCabinet(models.Model):
     user = models.OneToOneField(UserProfile, on_delete=models.CASCADE, related_name="cabinet")
+    projects = models.ManyToManyField('content.Projects', related_name='users', blank=True)
     telegram_channel = models.URLField(blank=True, null=True, verbose_name="Ссылка на Telegram-канал")
     google_form_link = models.URLField(blank=True, null=True, verbose_name="Ссылка на Google Form")
-    education_materials = models.TextField(blank=True, null=True, verbose_name="Обучающие материалы")
+    education_materials = models.ManyToManyField(
+        'content.EducationMaterial', blank=True, related_name="cabinets", verbose_name="Обучающие материалы"
+    )
 
     def __str__(self):
         return f"Кабинет {self.user.email}"
+    
+    class Meta:
+        verbose_name = "Кабинет пользователя"
+        verbose_name_plural = "Кабинеты пользователей"
