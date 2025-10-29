@@ -4,7 +4,7 @@ from .models import Banner, AboutMovement, Advantage, BrandMaterial
 
 @register(Banner)
 class BannerTranslationOptions(TranslationOptions):
-    fields = ('description', 'cta_text')
+    fields = ('title', 'description', 'cta_text')
 
 
 @register(AboutMovement)
