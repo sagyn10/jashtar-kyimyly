@@ -10,10 +10,22 @@ SECRET_KEY = config('SECRET_KEY', default='django-insecure-default-key')
 
 
 DEBUG = config('DEBUG', default=False, cast=bool)
-ALLOWED_HOSTS = ['38.180.136.75', 'localhost', '127.0.0.1']
-ALLOWED_HOSTS = config('ALLOWED_HOSTS').split(',')
+ALLOWED_HOSTS = ['*']
+#ALLOWED_HOSTS = config('ALLOWED_HOSTS').split(',')
 
 
+
+DATABASES = {
+    'default': {
+        
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': config('DB_NAME'),
+        'USER': config('DB_USER'),
+        'PASSWORD': config('DB_PASSWORD'),
+        'HOST': config('DB_HOST'),
+        'PORT': config('DB_PORT'),
+    }
+}
 
 CUSTOM_APPS = [
     'content',
@@ -121,16 +133,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': config('POSTGRES_DB'),
-        'USER': config('POSTGRES_USER'),
-        'PASSWORD': config('POSTGRES_PASSWORD'),
-        'HOST': config('POSTGRES_HOST', 'localhost'),
-        'PORT': config('POSTGRES_PORT', '5432'),
-    }
-}
+
 
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},

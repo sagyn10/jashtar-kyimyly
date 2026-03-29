@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 export DJANGO_SETTINGS_MODULE=config.settings.settings
 echo "🔄 Применяем миграции..."

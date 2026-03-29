@@ -1,6 +1,18 @@
-version: '3.10'
-
 services:
+  
+  postgres:
+    image: postgres:16
+    container_name: postgres
+    restart: always
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - webnet
+
   web:
     build:
       context: .
@@ -10,11 +22,19 @@ services:
       - .:/app
       - ./back_static:/app/config/back_static
       - ./back_media:/app/back_media
-      - ./sqlite_data:/app/sqlite_data   # папка для хранения sqlite базы
-    expose:
-      - "8000"
+      - ./sqlite_data:/app/sqlite_data   
+    ports:
+      - "8000:8000"
     environment:
-      - DJANGO_SETTINGS_MODULE=config.settings
+      - DJANGO_SETTINGS_MODULE=config.settings.settings
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_HOST=postgres
+      # Если нужно для Swagger локально:
+      - CSRF_TRUSTED_ORIGINS=http://127.0.0.1,http://localhost
+    depends_on:
+      - postgres # Ждем, пока база поднимется
     restart: always
     networks:
       - webnet
@@ -46,6 +66,7 @@ services:
     networks:
       - webnet
 
+# Регистрация всех сетей и томов (здесь были ошибки)
 networks:
   webnet:
     driver: bridge
@@ -53,3 +74,4 @@ networks:
 volumes:
   sqlite_data:
   lets:
+  pgdata: # Вот он, том для Postgres, из-за которого падала первая ошибка!
