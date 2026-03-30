@@ -11,9 +11,9 @@ SECRET_KEY = config('SECRET_KEY', default='django-insecure-default-key')
 
 
 DEBUG = config('DEBUG', default=False, cast=bool)
-ALLOWED_HOSTS = ['*']
-#ALLOWED_HOSTS = config('ALLOWED_HOSTS').split(',')
 
+allowed_hosts_env = config('ALLOWED_HOSTS', default='*')
+ALLOWED_HOSTS = allowed_hosts_env.split(',')
 
 
 DATABASES = {
