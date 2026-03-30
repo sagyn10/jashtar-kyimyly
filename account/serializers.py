@@ -91,3 +91,7 @@ class UserCabinetSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserCabinet
         fields = ['telegram_channel', 'google_form_link', 'projects', 'education_materials']
+
+class VerifyEmailSerializer(serializers.Serializer):
+    uid = serializers.IntegerField(help_text="ID пользователя")
+    token = serializers.CharField(help_text="Токен подтверждения")

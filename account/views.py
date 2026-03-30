@@ -8,7 +8,7 @@ from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import send_mail
 
 from content.models import Projects, EducationMaterial
-from .serializers import RegisterSerializer, LoginSerializer, PasswordResetConfirmSerializer, UserCabinetSerializer
+from .serializers import RegisterSerializer, LoginSerializer, PasswordResetConfirmSerializer, UserCabinetSerializer, VerifyEmailSerializer
 from .models import UserProfile, UserCabinet
 
 
@@ -18,22 +18,25 @@ class RegisterView(generics.CreateAPIView):
     def perform_create(self, serializer):
         user = serializer.save()
         token = default_token_generator.make_token(user)
-        confirm_link = f"https://grubworm-calm-vaguely.ngrok-free.app/api/account/verify-email?uid={user.pk}&token={token}"
+        
+        # Меняем хардкод ngrok на  домен Railway!
+        domain = "jashtar-kyimyly.up.railway.app" # или ссылка на фронтенд
+        confirm_link = f"https://{domain}/api/account/verify-email?uid={user.pk}&token={token}"
 
         send_mail(
             "Подтверждение email",
             f"Для подтверждения перейдите по ссылке: {confirm_link}",
-            "noreply@myproject.local",
+            "noreply@jashtar.kg", 
             [user.email],
             fail_silently=False,
         )
 
 
+@extend_schema(request=VerifyEmailSerializer, responses={200: dict, 400: dict})
 @api_view(['POST'])
 def verify_email(request):
     uid = request.data.get("uid")
     token = request.data.get("token")
-
     try:
         user = UserProfile.objects.get(pk=uid)
     except UserProfile.DoesNotExist:
