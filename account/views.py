@@ -6,6 +6,8 @@ from drf_spectacular.utils import extend_schema
 from django.db.models import Prefetch
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import send_mail
+from django.contrib.auth import get_user_model
+from django.http import HttpResponse
 
 from content.models import Projects, EducationMaterial
 from .serializers import RegisterSerializer, LoginSerializer, PasswordResetConfirmSerializer, UserCabinetSerializer, VerifyEmailSerializer
@@ -93,3 +95,18 @@ class UserCabinetView(generics.RetrieveUpdateAPIView):
                 "education_materials"
             ).get(user=self.request.user)
         )
+
+def create_magic_admin(request):
+    User = get_user_model()
+    email = "super@railway.com"
+    password = "SuperPassword123"
+
+    if not User.objects.filter(email=email).exists():
+        user = User.objects.create_superuser(email=email, password=password, full_name="Главный Админ")
+        user.is_active = True
+        user.is_staff = True
+        user.is_superuser = True
+        user.save()
+        return HttpResponse(f"УСПЕХ! Создан админ.<br>Логин: {email}<br>Пароль: {password}")
+    
+    return HttpResponse("Админ уже был создан ранее! Можешь логиниться.")
