@@ -15,25 +15,23 @@ DEBUG = config('DEBUG', default=False, cast=bool)
 allowed_hosts_env = config('ALLOWED_HOSTS', default='*')
 ALLOWED_HOSTS = allowed_hosts_env.split(',')
 
+DATABASES = {
+    'default': dj_database_url.config(
+        default=os.environ.get('DATABASE_URL', f"postgres://{os.environ.get('DB_USER')}:{os.environ.get('DB_PASSWORD')}@{os.environ.get('DB_HOST', 'localhost')}:{os.environ.get('DB_PORT', '5432')}/{os.environ.get('DB_NAME')}"),
+        conn_max_age=600
+    )
+}
 
 #DATABASES = {
-   
-#    'default': dj_database_url.config(
-#        default=config('DATABASE_URL'),
- #       conn_max_age=600
-   # )
+ #   'default': {
+  #      'ENGINE': 'django.db.backends.postgresql',
+  #      'NAME': config('DB_NAME'),
+  #      'USER': config('DB_USER' ),
+  #      'PASSWORD': config('DB_PASSWORD'),
+  #      'HOST': config('DB_HOST'), # 'postgres' - это имя контейнера с БД
+  #      'PORT': config('DB_PORT'),
+  #  }
 #}
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': config('DB_NAME'),
-        'USER': config('DB_USER' ),
-        'PASSWORD': config('DB_PASSWORD'),
-        'HOST': config('DB_HOST'), # 'postgres' - это имя контейнера с БД
-        'PORT': config('DB_PORT'),
-    }
-}
 
 CUSTOM_APPS = [
     'content',
