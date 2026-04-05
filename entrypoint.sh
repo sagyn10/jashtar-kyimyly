@@ -1,31 +1,39 @@
 #!/bin/bash
 
+# Остановить выполнение, если какая-то команда вернула ошибку
+set -e
+
 export DJANGO_SETTINGS_MODULE=config.settings.settings
+
 echo "🔄 Применяем миграции..."
-python manage.py makemigrations --noinput
+# Мы НЕ делаем makemigrations здесь, только применяем готовые
 python manage.py migrate --noinput
 
 echo "🧹 Собираем статику..."
 python manage.py collectstatic --noinput
 
-echo "👤 Создаем суперюзера, если его нет..."
+echo "👤 Проверяем суперюзера..."
 python manage.py shell <<EOF
-import django
-django.setup()
-from django.conf import settings
-from account.models import UserProfile
+import os
+from django.contrib.auth import get_user_model
 
-if not UserProfile.objects.filter(is_superuser=True).exists():
-    UserProfile.objects.create_superuser(
-        email=settings.SUPERUSER_EMAIL,
-        full_name=settings.SUPERUSER_NAME,
-        password=settings.SUPERUSER_PASSWORD,
-        is_active=True
+User = get_user_model()
+username = os.environ.get('SUPERUSER_USERNAME')
+email = os.environ.get('SUPERUSER_EMAIL')
+password = os.environ.get('SUPERUSER_PASSWORD')
+
+# Проверяем по email или по username (зависит от твоей модели)
+if not User.objects.filter(email=email).exists():
+    User.objects.create_superuser(
+        username=username,
+        email=email,
+        password=password
     )
-    print("✅ Суперюзер создан: admin / 1")
+    print(f"✅ Суперюзер {username} успешно создан!")
 else:
     print("⚠️ Суперюзер уже существует.")
 EOF
 
-echo "🚀 Запускаем Django сервер..."
-gunicorn config.wsgi:application --bind 0.0.0.0:${PORT:-8000}
+echo "🚀 Запускаем Gunicorn..."
+# Railway сам подставляет переменную PORT, поэтому используем её
+exec gunicorn config.wsgi:application --bind 0.0.0.0:${PORT:-8000}

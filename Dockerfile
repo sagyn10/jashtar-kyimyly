@@ -15,15 +15,13 @@ WORKDIR /app
 COPY requirements.txt /app/
 RUN pip install --upgrade pip && pip install --no-cache-dir -r requirements.txt
 
-# Копируем всё приложение
 COPY . /app/
 
-# Копируем entrypoint
-COPY entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
+# Даем права на выполнение скрипту внутри /app
+RUN chmod +x /app/entrypoint.sh
 
-# Открываем порт
+# Открываем порт (Railway сам его переопределит через переменную PORT, но для порядка пусть будет)
 EXPOSE 8000
 
-# Используем entrypoint для запуска миграций и gunicorn
-ENTRYPOINT ["/entrypoint.sh"]
+# Запускаем только через CMD
+CMD ["/app/entrypoint.sh"]
