@@ -16,12 +16,23 @@ allowed_hosts_env = config('ALLOWED_HOSTS', default='*')
 ALLOWED_HOSTS = allowed_hosts_env.split(',')
 
 
-DATABASES = {
+#DATABASES = {
    
-    'default': dj_database_url.config(
-        default=config('DATABASE_URL'),
-        conn_max_age=600
-    )
+#    'default': dj_database_url.config(
+#        default=config('DATABASE_URL'),
+ #       conn_max_age=600
+   # )
+#}
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': config('DB_NAME'),
+        'USER': config('DB_USER' ),
+        'PASSWORD': config('DB_PASSWORD'),
+        'HOST': config('DB_HOST'), # 'postgres' - это имя контейнера с БД
+        'PORT': config('DB_PORT'),
+    }
 }
 
 CUSTOM_APPS = [
@@ -36,12 +47,12 @@ THIRD_PARTY_APPS = [
     'rest_framework.authtoken',
     'drf_spectacular',
     'django_rest_passwordreset',
-    'modeltranslation',
     "corsheaders",
 ]
 
 INSTALLED_APPS = [
     'jazzmin',
+    'modeltranslation',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -54,11 +65,9 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-
-    "corsheaders.middleware.CorsMiddleware",
-
-    "django.middleware.common.CommonMiddleware",
     'django.middleware.locale.LocaleMiddleware',
+    "corsheaders.middleware.CorsMiddleware",
+    "django.middleware.common.CommonMiddleware",
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -154,10 +163,15 @@ AWS_LOCATION = config("AWS_S3_MEDIA_UPLOAD_DIR", default="production")
 AWS_DEFAULT_ACL = "public-read"
 AWS_QUERYSTRING_AUTH = False
 
-DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
-MEDIA_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/{AWS_LOCATION}/"
+#DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
+#MEDIA_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/{AWS_LOCATION}/"
 
 
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+
+LANGUAGE_CODE = 'ru'
 
 LANGUAGES = (
     ('en', 'English'),

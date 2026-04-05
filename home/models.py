@@ -1,32 +1,42 @@
-from decimal import Decimal
-
 from django.db import models
 from django.core.validators import FileExtensionValidator
-from content.models import News, Events
 
+class HomePage(models.Model):
+    slug = models.SlugField(unique=True, default="home", verbose_name="Связка")
+    home_title = models.CharField(max_length=155, verbose_name="Название главной страницы")
+    banner = models.CharField(max_length=155, verbose_name=" Банер")
+    about_movent = models.CharField(max_length=166, verbose_name=" О движении")
+    events = models.CharField(max_length=155, verbose_name="Мероприятия")
+    news = models.CharField(max_length=155, verbose_name="Новости")
+    brend_material = models.CharField(max_length=155, verbose_name="Бренд материал")
+
+    class Meta:
+        verbose_name = 'Главная страница'
+        verbose_name_plural = 'Главная страница'
+
+    def __str__(self):
+        return self.home_title
 
 class Banner(models.Model):
+    page = models.ForeignKey(HomePage, on_delete=models.CASCADE, related_name="Banner")
     title = models.CharField(max_length=100, verbose_name='Название баннера', null=False, blank=True)
     description = models.CharField(max_length=255, verbose_name='Текстовое описание')
     cta_text = models.CharField(max_length=255, verbose_name='Текст кнопки (СТА)', default='Вступить в движение')
     cta_link = models.URLField(verbose_name='Ссылка на Google Forms')
     
-
     class Meta:
         verbose_name = 'Баннер'
         verbose_name_plural = 'Баннеры'
     
     def __str__(self):
-        return self.description
-
+        return self.title
 
 class BannerImage(models.Model):
     banner = models.ForeignKey(Banner, on_delete=models.CASCADE, related_name='image')
     image = models.FileField(
         upload_to='banners/',
-        verbose_name="Изображение (SVG)",
-        validators=[FileExtensionValidator(allowed_extensions=['svg'])],
-        help_text="Загружайте только изображения в формате .svg"
+        verbose_name="Изображение ",
+        
     )
 
     class Meta:
@@ -36,51 +46,62 @@ class BannerImage(models.Model):
     def __str__(self):
         return f"{self.banner.description} - изображение"
 
-
 class AboutMovement(models.Model):
+    page = models.ForeignKey(HomePage, on_delete=models.CASCADE, related_name="about_movement")
     description = models.CharField(max_length=155, verbose_name='Описание')
 
     class Meta:
         verbose_name = 'О движении'
         verbose_name_plural = 'О движении'
-
+    
+    def __str__(self):
+        return self.description
 
 class Advantage(models.Model):
-    text = models.TextField(max_length=400, verbose_name='Преимущество')
+    about_movement = models.ForeignKey(AboutMovement, on_delete=models.CASCADE, related_name="about_movement")
+    title = models.CharField(max_length=155, verbose_name="Название")
+    text = models.TextField(max_length=400, verbose_name='Описание')
 
     class Meta:
-        verbose_name = 'Преимущество'
-        verbose_name_plural = 'Преимущества'
+        verbose_name = 'Карточки о движении'
+        verbose_name_plural = 'Карточки о движении'
+    
+    def __str__(self):
+        return self.title
 
-
-class BrandMaterial(models.Model):
-    title = models.CharField(max_length=255, verbose_name="Название материала")
-    file = models.FileField(
-        upload_to='brand_materials/',
-        verbose_name="Файл",
-        validators=[FileExtensionValidator(allowed_extensions=['jpg', 'jpeg', 'png', 'pdf', 'svg'])],
-        help_text="Допустимые форматы: jpg, jpeg, png, pdf, svg"
-    )
-    price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Цена материала', default=Decimal('0.00'))
-    description = models.TextField('Описание материала', null=True, blank=True)
+class EventsModel(models.Model):
+    page = models.ForeignKey(HomePage, on_delete=models.CASCADE, related_name="events_items")
+    image = models.ImageField(upload_to="events/", verbose_name="Изображение")
+    data = models.DateField()
+    title = models.CharField(max_length=155, verbose_name="Название")
+    short_text = models.TextField(max_length=255, verbose_name="Короткий текст")
 
     class Meta:
-        verbose_name = "Бренд-материал"
-        verbose_name_plural = "Бренд-материалы"
-
-class BrandMaterialImage(models.Model):
-    brand_material = models.ForeignKey(BrandMaterial, on_delete=models.CASCADE, related_name='images')
-    image = models.FileField(
-        upload_to='brand_materials/',
-        verbose_name="Изображение",
-        validators=[FileExtensionValidator(allowed_extensions=['jpg', 'jpeg', 'png', 'pdf', 'svg'])],
-        help_text="Допустимые форматы: jpg, jpeg, png, pdf, svg"
-    )
-
-    class Meta:
-        verbose_name = "Изображение материала"
-        verbose_name_plural = "Изображения материала"
+        verbose_name = 'Карточка мероприятия'
+        verbose_name_plural = 'Карточки мероприятий'
 
     def __str__(self):
-        return f"{self.brand_material.title} - изображение"
+        return self.title
     
+class NewsModel(models.Model):
+    page = models.ForeignKey(HomePage, on_delete=models.CASCADE, related_name="news_items")
+    news_image = models.ImageField(upload_to="news/", verbose_name="Изображения новостей")
+    data = models.DateField()
+    description = models.TextField(max_length=255, verbose_name="Описание")
+
+    class Meta:
+        verbose_name = 'Новость'
+        verbose_name_plural = 'Новости'
+
+    def __str__(self):
+        return f"Новость от {self.data}"
+
+class BrendMaterialModel(models.Model):
+    page = models.ForeignKey(HomePage, on_delete=models.CASCADE, related_name="brend_items")
+    image = models.ImageField(upload_to="brend_material/", verbose_name="Изображение")
+    title = models.CharField(max_length=155, verbose_name="Название")
+    price = models.IntegerField()
+     
+    class Meta:
+        verbose_name = 'Бренд материал'
+        verbose_name_plural = 'Бренд материалы'

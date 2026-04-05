@@ -1,40 +1,62 @@
-from . import translation
 from django.contrib import admin
-from modeltranslation.admin import TranslationAdmin, TranslationTabularInline
-from _common.mixins import TranslatorMediaMixin
-from .models import Banner, BannerImage, AboutMovement, BrandMaterial, Advantage, BrandMaterialImage
+
+from modeltranslation.admin import TranslationAdmin, TranslationStackedInline
+from .models import (
+    HomePage, Banner, BannerImage, AboutMovement, 
+    Advantage, EventsModel, NewsModel, BrendMaterialModel
+)
+
+# === INLINES ===
+
 
 class BannerImageInline(admin.TabularInline):
     model = BannerImage
-    extra = 0
-    max_num = 10
+    extra = 1
 
+class AdvantageInline(TranslationStackedInline):
+    model = Advantage
+    extra = 1
+
+
+
+@admin.register(HomePage)
+class HomePageAdmin(TranslationAdmin):
+    list_display = ("home_title", "slug")
+    search_fields = ("home_title",)
+    
+    def has_add_permission(self, request):
+        
+        if self.model.objects.exists():
+            return False
+       
+        return super().has_add_permission(request)
 
 @admin.register(Banner)
-class BannerAdmin(TranslatorMediaMixin, TranslationAdmin):
-    list_display = ('title', 'description', 'cta_text', 'cta_link')
-    list_display_links = ('description', )
+class BannerAdmin(TranslationAdmin):
+    list_display = ("title", "page")
+    autocomplete_fields = ("page",)
     inlines = [BannerImageInline]
 
-
 @admin.register(AboutMovement)
-class AboutMovementAdmin(TranslatorMediaMixin, TranslationAdmin):
-    list_display = ('description',)
+class AboutMovementAdmin(TranslationAdmin):
+    list_display = ("description", "page")
+    autocomplete_fields = ("page",)
+    inlines = [AdvantageInline]
 
-# @admin.register(News)
-# class NewsAdmin(admin.ModelAdmin):
-#     list_display = ('title', 'description', 'date')
+@admin.register(EventsModel)
+class EventsAdmin(TranslationAdmin):
+    list_display = ("title", "data", "page")
+    autocomplete_fields = ("page",)
+    list_filter = ("page", "data")
 
-class BrandMaterialImageInline(admin.TabularInline):
-    model = BrandMaterialImage
-    extra = 0
-    max_num = 10
+@admin.register(NewsModel)
+class NewsAdmin(TranslationAdmin):
+    list_display = ("id", "data", "page")
+    autocomplete_fields = ("page",)
+    list_filter = ("page", "data")
 
-@admin.register(BrandMaterial)
-class BrandMaterialAdmin(TranslatorMediaMixin, TranslationAdmin):
-    list_display = ('title', 'file')
-    inlines = [BrandMaterialImageInline]
-
-@admin.register(Advantage)
-class AdvantageAdmin(TranslatorMediaMixin, TranslationAdmin):
-    list_display = ('pk',)
+@admin.register(BrendMaterialModel)
+class BrendMaterialAdmin(TranslationAdmin):
+    list_display = ("title", "price", "page")
+    autocomplete_fields = ("page",)
+    list_filter = ("page",)
