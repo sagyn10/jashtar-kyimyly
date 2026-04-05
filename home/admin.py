@@ -25,10 +25,13 @@ class HomePageAdmin(TranslationAdmin):
     search_fields = ("home_title",)
     
     def has_add_permission(self, request):
-        
-        if self.model.objects.exists():
-            return False
-       
+        try:
+            if self.model.objects.exists():
+                return False
+        except Exception:
+            # Если таблицы нет (например, во время миграций), 
+            # просто разрешаем доступ, чтобы не было ошибки
+            return True
         return super().has_add_permission(request)
 
 @admin.register(Banner)
